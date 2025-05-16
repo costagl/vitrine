@@ -1,0 +1,6 @@
+@VitrineApi_HostAddress = http://localhost:5137
+
+GET {{VitrineApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
