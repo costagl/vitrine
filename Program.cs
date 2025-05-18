@@ -6,14 +6,15 @@ using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
-using Vitrine.Models;
 using VitrineApi.Data;
+using VitrineApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -34,18 +35,26 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+var audience = builder.Configuration["Jwt:Audience"];
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        policy.WithOrigins(audience)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
-builder.Services.AddDbContext<UserAuthDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+//builder.Services.AddDbContext<UserAuthDbContext>(options =>
+//options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineDB")));
 
-builder.Services.AddIdentity<Lojista, IdentityRole>(options =>
+builder.Services.AddDbContext<VitrineDBContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("UserAuth")));
+
+builder.Services.AddIdentity<LojistaAuth, IdentityRole>(options =>
 {
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 8;
@@ -56,7 +65,7 @@ builder.Services.AddIdentity<Lojista, IdentityRole>(options =>
     options.SignIn.RequireConfirmedEmail = false;
     options.SignIn.RequireConfirmedPhoneNumber = false;
 })
-    .AddEntityFrameworkStores<UserAuthDbContext>()
+    .AddEntityFrameworkStores<VitrineDBContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllers();
