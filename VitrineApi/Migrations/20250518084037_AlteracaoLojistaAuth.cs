@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace VitrineApi.Migrations
 {
     /// <inheritdoc />
-    public partial class DadosLojista : Migration
+    public partial class AlteracaoLojistaAuth : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,13 +30,7 @@ namespace VitrineApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CPF = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
-                    NomeCompleto = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CNPJ = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
-                    NomeLoja = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    CategoriaVenda = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    LembrarDeMim = table.Column<bool>(type: "bit", nullable: false),
+                    Cpf = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -55,6 +49,35 @@ namespace VitrineApi.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CategoriaProduto",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Titulo = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
+                    Imagem = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoriaProduto", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Lojista",
+                columns: table => new
+                {
+                    Cpf = table.Column<string>(type: "varchar(11)", unicode: false, maxLength: 11, nullable: false),
+                    NomeCompleto = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
+                    DataNascimento = table.Column<DateOnly>(type: "date", nullable: false),
+                    Celular = table.Column<string>(type: "varchar(11)", unicode: false, maxLength: 11, nullable: true),
+                    Email = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Lojista", x => x.Cpf);
                 });
 
             migrationBuilder.CreateTable(
@@ -163,6 +186,65 @@ namespace VitrineApi.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Loja",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NomeLoja = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
+                    CategoriaLoja = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
+                    Tema = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
+                    Layout = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
+                    Cpf = table.Column<string>(type: "varchar(11)", unicode: false, maxLength: 11, nullable: false),
+                    Cnpj = table.Column<string>(type: "varchar(14)", unicode: false, maxLength: 14, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Loja", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Loja_Lojista",
+                        column: x => x.Cpf,
+                        principalTable: "Lojista",
+                        principalColumn: "Cpf");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Produto",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Titulo = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
+                    IdLoja = table.Column<int>(type: "int", nullable: false),
+                    ValorUnitario = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    ValorPromocional = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
+                    Estoque = table.Column<int>(type: "int", nullable: false),
+                    Sku = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
+                    Imagem = table.Column<string>(type: "varchar(255)", unicode: false, maxLength: 255, nullable: false),
+                    Ativo = table.Column<byte>(type: "tinyint", nullable: false),
+                    Peso = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    Descrição = table.Column<string>(type: "text", nullable: false),
+                    Altura = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    Largura = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    Profundidade = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    IdCategoriaProduto = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Produto", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Produto_CategoriaProduto",
+                        column: x => x.IdCategoriaProduto,
+                        principalTable: "CategoriaProduto",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Produto_Loja",
+                        column: x => x.IdLoja,
+                        principalTable: "Loja",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -201,6 +283,21 @@ namespace VitrineApi.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Loja_Cpf",
+                table: "Loja",
+                column: "Cpf");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Produto_IdCategoriaProduto",
+                table: "Produto",
+                column: "IdCategoriaProduto");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Produto_IdLoja",
+                table: "Produto",
+                column: "IdLoja");
         }
 
         /// <inheritdoc />
@@ -222,10 +319,22 @@ namespace VitrineApi.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Produto");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "CategoriaProduto");
+
+            migrationBuilder.DropTable(
+                name: "Loja");
+
+            migrationBuilder.DropTable(
+                name: "Lojista");
         }
     }
 }

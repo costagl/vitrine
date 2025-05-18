@@ -1,6 +1,6 @@
 [
   {
-    "ContainingType": "Vitrine.Controllers.AccountController",
+    "ContainingType": "VitrineApi.Controllers.AccountController",
     "Method": "Login",
     "RelativePath": "api/Account/login",
     "HttpMethod": "POST",
@@ -16,7 +16,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Vitrine.Controllers.AccountController",
+    "ContainingType": "VitrineApi.Controllers.AccountController",
     "Method": "Logout",
     "RelativePath": "api/Account/logout",
     "HttpMethod": "POST",
@@ -26,7 +26,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Vitrine.Controllers.AccountController",
+    "ContainingType": "VitrineApi.Controllers.AccountController",
     "Method": "Register",
     "RelativePath": "api/Account/register",
     "HttpMethod": "POST",
@@ -42,7 +42,27 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Vitrine.Controllers.AccountController",
+    "ContainingType": "VitrineApi.Controllers.AccountController",
+    "Method": "RodarRegisterDireto",
+    "RelativePath": "api/Account/register-test",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VitrineApi.Controllers.AccountController",
+    "Method": "RegisterTest",
+    "RelativePath": "api/Account/register-test",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VitrineApi.Controllers.AccountController",
     "Method": "Test",
     "RelativePath": "api/Account/test",
     "HttpMethod": "GET",
