@@ -139,78 +139,77 @@ namespace VitrineApi.Controllers
             return Ok(new { message = "Logout bem-sucedido!" });
         }
 
-        [HttpGet("register-test")]
-        public async Task<IActionResult> RodarRegisterDireto()
-        {
-            return await RegisterTest(); 
-        }
+        //[HttpGet("register-test")]
+        //public async Task<IActionResult> RodarRegisterDireto()
+        //{
+        //    return await RegisterTest(); 
+        //}
 
-        [HttpPost("register-test")]
-        public async Task<IActionResult> RegisterTest()
-        {
-            string cpfAux = "11111111115";
+        //[HttpPost("register-test")]
+        //public async Task<IActionResult> RegisterTest()
+        //{
+        //    string cpfAux = "11111111115";
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
 
-            if (_context.Lojista.Any(l => l.Cpf == cpfAux))
-                return BadRequest("CPF já cadastrado.");
+        //    if (_context.Lojista.Any(l => l.Cpf == cpfAux))
+        //        return BadRequest("CPF já cadastrado.");
 
-            using var transaction = await _context.Database.BeginTransactionAsync();
+        //    using var transaction = await _context.Database.BeginTransactionAsync();
 
-            try
-            {
-                var lojista = new Lojista
-                {
-                    NomeCompleto = "Register Test",
-                    Celular = "24999642650",
-                    Cpf = cpfAux,
-                    DataNascimento = DateOnly.ParseExact("14/12/2002", "dd/MM/yyyy", null),
-                    Email = "registerTest@gmail.com"
-                };
+        //    try
+        //    {
+        //        var lojista = new Lojista
+        //        {
+        //            NomeCompleto = "Register Test",
+        //            Celular = "24999642650",
+        //            Cpf = cpfAux,
+        //            DataNascimento = DateOnly.ParseExact("14/12/2002", "dd/MM/yyyy", null),
+        //            Email = "registerTest@gmail.com"
+        //        };
 
-                await _context.Lojista.AddAsync(lojista);
-                await _context.SaveChangesAsync();
+        //        await _context.Lojista.AddAsync(lojista);
+        //        await _context.SaveChangesAsync();
 
-                var userAuth = new LojistaAuth
-                {
-                    UserName = "registerTest@gmail.com",
-                    Email = "registerTest@gmail.com",
-                    Cpf = cpfAux
-                };
+        //        var userAuth = new LojistaAuth
+        //        {
+        //            UserName = "registerTest@gmail.com",
+        //            Email = "registerTest@gmail.com",
+        //            Cpf = cpfAux
+        //        };
 
-                var result = await _userManager.CreateAsync(userAuth, "1234567890");
-                if (!result.Succeeded)
-                {
-                    await transaction.RollbackAsync();
-                    return BadRequest(result.Errors);
-                }
+        //        var result = await _userManager.CreateAsync(userAuth, "1234567890");
+        //        if (!result.Succeeded)
+        //        {
+        //            await transaction.RollbackAsync();
+        //            return BadRequest(result.Errors);
+        //        }
 
-                var loja = new Loja
-                {
-                    NomeLoja = "Loja Register Test",
-                    CategoriaLoja = "Categoria Register Test",
-                    Tema = "Padrão",
-                    Layout = "Clássico",
-                    Cpf = cpfAux,
-                    Cnpj = "11111111111111"
-                };
+        //        var loja = new Loja
+        //        {
+        //            NomeLoja = "Loja Register Test",
+        //            CategoriaLoja = "Categoria Register Test",
+        //            Tema = "Padrão",
+        //            Layout = "Clássico",
+        //            Cpf = cpfAux,
+        //            Cnpj = "11111111111111"
+        //        };
 
-                _context.Loja.Add(loja);
-                await _context.SaveChangesAsync();
+        //        _context.Loja.Add(loja);
+        //        await _context.SaveChangesAsync();
 
-                await transaction.CommitAsync();
+        //        await transaction.CommitAsync();
 
-                await _signInManager.SignInAsync(userAuth, isPersistent: false);
+        //        await _signInManager.SignInAsync(userAuth, isPersistent: false);
 
-                return Ok(new { message = "Cadastro realizado com sucesso!" });
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                return BadRequest(new { message = "Erro ao cadastrar: " + ex.Message });
-            }
-        }
-
+        //        return Ok(new { message = "Cadastro realizado com sucesso!" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await transaction.RollbackAsync();
+        //        return BadRequest(new { message = "Erro ao cadastrar: " + ex.Message });
+        //    }
+        //}
     }
 }

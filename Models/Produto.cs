@@ -45,7 +45,7 @@ public partial class Produto
 
     [Required]
     [Column(TypeName = "text")]
-    public string Descrição { get; set; }
+    public string Descricao { get; set; }
 
     [Column(TypeName = "decimal(10, 2)")]
     public decimal Altura { get; set; }

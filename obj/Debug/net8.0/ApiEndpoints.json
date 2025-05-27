@@ -43,8 +43,8 @@
   },
   {
     "ContainingType": "VitrineApi.Controllers.AccountController",
-    "Method": "RodarRegisterDireto",
-    "RelativePath": "api/Account/register-test",
+    "Method": "Test",
+    "RelativePath": "api/Account/test",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -52,9 +52,25 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.AccountController",
-    "Method": "RegisterTest",
-    "RelativePath": "api/Account/register-test",
+    "ContainingType": "VitrineApi.Controllers.ProdutoController",
+    "Method": "CadastrarProduto",
+    "RelativePath": "api/Produto/cadastrar-produto",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "VitrineApi.Models.Produto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VitrineApi.Controllers.ProdutoController",
+    "Method": "CadastrarProdutoTeste",
+    "RelativePath": "api/Produto/cadastrar-produto-teste",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -62,9 +78,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.AccountController",
-    "Method": "Test",
-    "RelativePath": "api/Account/test",
+    "ContainingType": "VitrineApi.Controllers.ProdutoController",
+    "Method": "CadastrarProdutoGet",
+    "RelativePath": "api/Produto/cadastrar-produto-teste-get",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

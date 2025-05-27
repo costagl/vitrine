@@ -13,6 +13,7 @@
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.16",
           "Microsoft.EntityFrameworkCore.Design": "8.0.16",
           "Microsoft.EntityFrameworkCore.SqlServer": "8.0.16",
+          "Microsoft.EntityFrameworkCore.Tools": "8.0.16",
           "Microsoft.Identity.Web": "2.15.2",
           "Microsoft.Identity.Web.DownstreamApi": "2.15.2",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "8.0.7",
@@ -1299,6 +1300,11 @@
             "assemblyVersion": "8.0.16.0",
             "fileVersion": "8.0.1625.21606"
           }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.Tools/8.0.16": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Design": "8.0.16"
         }
       },
       "Microsoft.Extensions.ApiDescription.Server/6.0.5": {},
@@ -2854,6 +2860,13 @@
       "sha512": "sha512-1krdya77j7NJnzS9dG3QCOSpzP6TyShx5rgAop0idnoWNKbxmM8hXTDVif/viUkZvztZeFyCx6XQwUS/0343Eg==",
       "path": "microsoft.entityframeworkcore.sqlserver/8.0.16",
       "hashPath": "microsoft.entityframeworkcore.sqlserver.8.0.16.nupkg.sha512"
+    },
+    "Microsoft.EntityFrameworkCore.Tools/8.0.16": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AHFFtZSz/KuviL17IEYmCP53EqP9DydvDuOxWnW9rJou3nhVGJj1yvOIkLU8nXU4qiPYBheTH29UI/3Mefptkw==",
+      "path": "microsoft.entityframeworkcore.tools/8.0.16",
+      "hashPath": "microsoft.entityframeworkcore.tools.8.0.16.nupkg.sha512"
     },
     "Microsoft.Extensions.ApiDescription.Server/6.0.5": {
       "type": "package",
