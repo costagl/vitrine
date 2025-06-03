@@ -11,7 +11,7 @@ namespace VitrineApi.ViewModels
         [Required(ErrorMessage = "Senha é necessário.")]
         [DataType(DataType.Password)]
         [Display(Name = "Senha")]
-        public string Password { get; set; }
+        public string Senha { get; set; }
 
         [Display(Name = "Lembrar-se de mim?")]
         public bool RememberMe { get; set; }

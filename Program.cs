@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
 using VitrineApi.Data;
+using VitrineApi.Interfaces;
 using VitrineApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,7 +53,7 @@ builder.Services.AddCors(options =>
 //options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineDB")));
 
 builder.Services.AddDbContext<VitrineDBContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("UserAuth")));
+options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineDB")));
 
 builder.Services.AddIdentity<LojistaAuth, IdentityRole>(options =>
 {
@@ -73,6 +74,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<ILojaService, LojaService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -85,6 +88,9 @@ if (app.Environment.IsDevelopment())
 app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
+
+app.UseRouting(); 
+app.UseMiddleware<LojaMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

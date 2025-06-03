@@ -14,6 +14,11 @@ public partial class Loja
     public int Id { get; set; }
 
     [Required]
+    [StringLength(100)]
+    [Unicode(false)]
+    public string Subdominio { get; set; }
+
+    [Required]
     [StringLength(255)]
     [Unicode(false)]
     public string NomeLoja { get; set; }

@@ -13,14 +13,14 @@ namespace VitrineApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class ContaController : Controller
     {
         private readonly SignInManager<LojistaAuth> _signInManager;
         private readonly UserManager<LojistaAuth> _userManager;
         private readonly IConfiguration _config;
         private readonly VitrineDBContext _context;
 
-        public AccountController(SignInManager<LojistaAuth> signInManager, UserManager<LojistaAuth> userManager, IConfiguration config, VitrineDBContext context)
+        public ContaController(SignInManager<LojistaAuth> signInManager, UserManager<LojistaAuth> userManager, IConfiguration config, VitrineDBContext context)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -28,11 +28,12 @@ namespace VitrineApi.Controllers
             _context = context;
         }
 
-        [HttpGet("test")]
-        public IActionResult Test()
+        [HttpGet("health")]
+        public IActionResult ApiHealth()
         {
             return Ok(new { message = "A API está funcionando!" });
         }
+
         private string GenerateJwtToken(IdentityUser user)
         {
             var claims = new[]
@@ -64,7 +65,7 @@ namespace VitrineApi.Controllers
 
             var result = await _signInManager.PasswordSignInAsync(
                 model.Email,
-                model.Password,
+                model.Senha,
                 model.RememberMe,
                 lockoutOnFailure: false
             );
@@ -73,7 +74,7 @@ namespace VitrineApi.Controllers
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 var token = GenerateJwtToken(user);
-                return Ok(new { token });
+                return Ok(new { token, user });
             }
 
             return Unauthorized(new { message = "E-mail ou senha inválidos." });
@@ -89,45 +90,58 @@ namespace VitrineApi.Controllers
             if (_context.Lojista.Any(l => l.Cpf == model.Cpf))
                 return BadRequest("CPF já cadastrado.");
 
-            var lojista = new Lojista
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
             {
-                NomeCompleto = model.Name,
-                Celular = model.Celular,
-                Cpf = model.Cpf,
-                DataNascimento = DateOnly.ParseExact(model.DataNascimento, "dd/MM/yyyy", null),
-                Email = model.Email
-            };
+                var lojista = new Lojista
+                {
+                    NomeCompleto = model.Nome,
+                    Celular = model.Celular,
+                    Cpf = model.Cpf,
+                    DataNascimento = DateOnly.ParseExact(model.DataNascimento, "dd-MM-yyyy", null),
+                    Email = model.Email
+                };
 
-            _context.Lojista.Add(lojista);
-            await _context.SaveChangesAsync();
+                _context.Lojista.Add(lojista);
+                await _context.SaveChangesAsync();
 
-            var userAuth = new LojistaAuth
+                var userAuth = new LojistaAuth
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    Cpf = model.Cpf
+                };
+
+                var result = await _userManager.CreateAsync(userAuth, model.Senha);
+                if (!result.Succeeded)
+                    return BadRequest(result.Errors); // A transação vai ser descartada no `finally` se não der commit
+
+                var loja = new Loja
+                {
+                    NomeLoja = model.NomeLoja,
+                    CategoriaLoja = model.CategoriaVenda,
+                    Tema = "Padrão",
+                    Layout = "Clássico",
+                    Cpf = model.Cpf,
+                    Cnpj = model.Cnpj,
+                    Subdominio = model.Subdominio
+                };
+
+                _context.Loja.Add(loja);
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                await _signInManager.SignInAsync(userAuth, isPersistent: false);
+
+                return Ok(new { message = "Cadastro realizado com sucesso!" });
+            }
+            catch
             {
-                UserName = model.Email,
-                Email = model.Email,
-                Cpf = model.Cpf
-            };
-
-            var result = await _userManager.CreateAsync(userAuth, model.Password);
-            if (!result.Succeeded)
-                return BadRequest(result.Errors);
-
-            var loja = new Loja
-            {
-                NomeLoja = model.NomeLoja,
-                CategoriaLoja = model.CategoriaVenda,
-                Tema = "Padrão",
-                Layout = "Clássico",
-                Cpf = model.Cpf,
-                Cnpj = model.Cnpj
-            };
-
-            _context.Loja.Add(loja);
-            await _context.SaveChangesAsync();
-
-            await _signInManager.SignInAsync(userAuth, isPersistent: false);
-
-            return Ok(new { message = "Cadastro realizado com sucesso!" });
+                await transaction.RollbackAsync();
+                return StatusCode(500, "Erro ao realizar o cadastro.");
+            }
         }
 
 
@@ -139,6 +153,21 @@ namespace VitrineApi.Controllers
             return Ok(new { message = "Logout bem-sucedido!" });
         }
 
+
+        [HttpGet("verify-subdomain")]
+        public async Task<IActionResult> VerificarSubdominioExistente([FromQuery] string subdominio)
+        {
+            if (string.IsNullOrWhiteSpace(subdominio))
+            {
+                return BadRequest(new { message = "Subdomínio não pode ser vazio" });
+            }
+
+            bool existe = await _context.Loja.AnyAsync(l => l.Subdominio.ToLower() == subdominio.ToLower());
+            bool disponivel = !existe;
+
+            // se está disponível = true
+            return Ok(new { disponivel });
+        }
         //[HttpGet("register-test")]
         //public async Task<IActionResult> RodarRegisterDireto()
         //{

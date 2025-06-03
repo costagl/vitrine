@@ -35,7 +35,7 @@ namespace VitrineApi.Controllers
             {
                 Titulo = model.Titulo,
                 IdLoja = loja.Id,
-                IdCategoriaProduto = 2, // Sem Categoria
+                IdCategoriaProduto = 2, // 2 = Sem Categoria
                 ValorUnitario = model.ValorUnitario,
                 Estoque = model.Estoque,
                 Sku = model.Sku,
@@ -50,44 +50,44 @@ namespace VitrineApi.Controllers
             return Ok(new { message = "Cadastro de produto realizado com sucesso!" });
         }
 
-        // teste
+        //// teste
 
-        [Authorize]
-        [HttpGet("cadastrar-produto-teste-get")]
-        public async Task<IActionResult> CadastrarProdutoGet()
-        {
-            return await CadastrarProdutoTeste();
-        }
+        //[Authorize]
+        //[HttpGet("cadastrar-produto-teste-get")]
+        //public async Task<IActionResult> CadastrarProdutoGet()
+        //{
+        //    return await CadastrarProdutoTeste();
+        //}
 
-        [Authorize]
-        [HttpPost("cadastrar-produto-teste")]
-        public async Task<IActionResult> CadastrarProdutoTeste()
-        {
-            var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
-            var userCpf = user.Cpf;
+        //[Authorize]
+        //[HttpPost("cadastrar-produto-teste")]
+        //public async Task<IActionResult> CadastrarProdutoTeste()
+        //{
+        //    var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+        //    var userCpf = user.Cpf;
 
-            var loja = _context.Loja.FirstOrDefault(c => c.Cpf == userCpf);
+        //    var loja = _context.Loja.FirstOrDefault(c => c.Cpf == userCpf);
 
-            Produto produto = new Produto()
-            {
-                Titulo = "Camisa Polo Masculina",
-                IdLoja = loja.Id,
-                IdCategoriaProduto = 2,
-                ValorUnitario = 99.90m,
-                Estoque = 50,
-                Sku = "CAM-POLO-001",
-                Imagem = "https://exemplo.com/imagens/camisa-polo.jpg",
-                Ativo = 1,
-                Peso = 0.3m,
-                Altura = 2.0m,
-                Largura = 30.0m,
-                Profundidade = 25.0m,
-                Descricao = "Camisa polo 100% algodão, confortável e estilosa."
-            };
-            _context.Produto.Add(produto);
-            await _context.SaveChangesAsync();
+        //    Produto produto = new Produto()
+        //    {
+        //        Titulo = "Camisa Polo Masculina",
+        //        IdLoja = loja.Id,
+        //        IdCategoriaProduto = 2,
+        //        ValorUnitario = 99.90m,
+        //        Estoque = 50,
+        //        Sku = "CAM-POLO-001",
+        //        Imagem = "https://exemplo.com/imagens/camisa-polo.jpg",
+        //        Ativo = 1,
+        //        Peso = 0.3m,
+        //        Altura = 2.0m,
+        //        Largura = 30.0m,
+        //        Profundidade = 25.0m,
+        //        Descricao = "Camisa polo 100% algodão, confortável e estilosa."
+        //    };
+        //    _context.Produto.Add(produto);
+        //    await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Cadastro de produto realizado com sucesso!" });
-        }
+        //    return Ok(new { message = "Cadastro de produto realizado com sucesso!" });
+        //}
     }
 }
