@@ -26,28 +26,32 @@ builder.Services.AddAuthentication(options =>
     var config = builder.Configuration;
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = config["Jwt:Issuer"],
-        ValidAudience = config["Jwt:Audience"],
+        //ValidIssuer = config["Jwt:Issuer"],
+        //ValidAudience = config["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]))
     };
 });
 
-var audience = builder.Configuration["Jwt:Audience"];
+var allowedOrigin = builder.Configuration["Jwt:Audience"];
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.WithOrigins(audience)
+        //policy.WithOrigins(allowedOrigin, "http://localhost:3000")
+        //      .AllowAnyHeader()
+        //      .AllowAnyMethod()
+        //      .AllowCredentials();
+        policy.AllowAnyOrigin() 
               .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowAnyMethod();
     });
 });
+
 
 //builder.Services.AddDbContext<UserAuthDbContext>(options =>
 //options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineDB")));
@@ -75,6 +79,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ILojaService, LojaService>();
+builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
 var app = builder.Build();
 
@@ -89,7 +94,7 @@ app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 
-app.UseRouting(); 
+app.UseRouting();
 app.UseMiddleware<LojaMiddleware>();
 
 app.UseAuthentication();

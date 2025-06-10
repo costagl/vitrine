@@ -1,93 +1,123 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using VitrineApi.Data;
+using VitrineApi.DTOs;
+using VitrineApi.Interfaces;
 using VitrineApi.Models;
-using VitrineApi.ViewModels;
 
-namespace VitrineApi.Controllers
+[ApiController]
+[Route("produto")]
+public class ProdutoController : ControllerBase
 {
+    private readonly IRepositoryBase<Produto> _produtoRepo;
+    private readonly UserManager<LojistaAuth> _userManager;
+    private readonly VitrineDBContext _context;
 
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProdutoController : Controller
+    public ProdutoController(IRepositoryBase<Produto> produtoRepo, UserManager<LojistaAuth> userManager, VitrineDBContext context)
     {
-        private readonly VitrineDBContext _context;
-        private readonly SignInManager<LojistaAuth> _signInManager;
-        private readonly UserManager<LojistaAuth> _userManager;
+        _produtoRepo = produtoRepo;
+        _userManager = userManager;
+        _context = context;
+    }
 
-        public ProdutoController(VitrineDBContext context, SignInManager<LojistaAuth> signInManager, UserManager<LojistaAuth> userManager)
+    [HttpPost("cadastrar")]
+    public async Task<IActionResult> Cadastrar([FromBody] Produto model)
+    {
+        var userId = _userManager.GetUserId(User);
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized("Usuário não autenticado");
+
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null)
+            return Unauthorized("Usuário não encontrado");
+
+        var loja = _context.Loja.FirstOrDefault(c => c.Cpf == user.Cpf);
+
+        if (loja == null)
+            return BadRequest("Loja não encontrada para o usuário.");
+
+        model.IdLoja = loja.Id;
+        model.IdCategoriaProduto = 2; // Sem Categoria
+
+        var dto = new ProdutoDTO
         {
-            _context = context;
-            _signInManager = signInManager;
-            _userManager = userManager;
-        }
+            Id = model.Id,
+            Titulo = model.Titulo,
+            IdLoja = model.IdLoja,
+            ValorUnitario = model.ValorUnitario,
+            ValorPromocional = model.ValorPromocional,
+            Estoque = model.Estoque,
+            Sku = model.Sku,
+            Imagem = model.Imagem,
+            Ativo = model.Ativo,
+            Peso = model.Peso,
+            Descricao = model.Descricao,
+            Altura = model.Altura,
+            Largura = model.Largura,
+            Profundidade = model.Profundidade,
+            IdCategoriaProduto = model.IdCategoriaProduto
+        };
 
-        [HttpPost("cadastrar-produto")]
-        public async Task<IActionResult> CadastrarProduto([FromBody] Produto model)
-        {
-            var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
-            var userCpf = user.Cpf;
+        await _produtoRepo.IncluirAsync(model);
 
-            var loja = _context.Loja.FirstOrDefault(c => c.Cpf == userCpf);
+        return Ok(new { message = "Produto cadastrado com sucesso!", produto = dto });
+    }
 
-            Produto produto = new Produto()
-            {
-                Titulo = model.Titulo,
-                IdLoja = loja.Id,
-                IdCategoriaProduto = 2, // 2 = Sem Categoria
-                ValorUnitario = model.ValorUnitario,
-                Estoque = model.Estoque,
-                Sku = model.Sku,
-                Imagem = model.Imagem,
-                Ativo = model.Ativo,
-                Peso = model.Peso,
-                Altura = model.Altura,
-                Largura = model.Largura,
-                Profundidade = model.Profundidade,
-                Descricao = model.Descricao
-            };
-            return Ok(new { message = "Cadastro de produto realizado com sucesso!" });
-        }
+    [HttpGet("listar")]
+    public async Task<IActionResult> Listar()
+    {
+        var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+        var loja = _context.Loja.FirstOrDefault(c => c.Cpf == user.Cpf);
 
-        //// teste
+        if (loja == null)
+            return NotFound("Loja não encontrada.");
 
-        //[Authorize]
-        //[HttpGet("cadastrar-produto-teste-get")]
-        //public async Task<IActionResult> CadastrarProdutoGet()
-        //{
-        //    return await CadastrarProdutoTeste();
-        //}
+        var produtos = await _produtoRepo.ListarAsync(p => p.IdLoja == loja.Id);
+        return Ok(produtos);
+    }
 
-        //[Authorize]
-        //[HttpPost("cadastrar-produto-teste")]
-        //public async Task<IActionResult> CadastrarProdutoTeste()
-        //{
-        //    var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
-        //    var userCpf = user.Cpf;
+    [HttpGet("listar/{id}")]
+    public async Task<IActionResult> Buscar(int id)
+    {
+        var produto = await _produtoRepo.BuscarPorIdAsync(id);
+        if (produto == null)
+            return NotFound("Produto não encontrado.");
+        return Ok(produto);
+    }
 
-        //    var loja = _context.Loja.FirstOrDefault(c => c.Cpf == userCpf);
+    [HttpPut("alterar/{id}")]
+    public async Task<IActionResult> Atualizar(int id, [FromBody] Produto model)
+    {
+        var produto = await _produtoRepo.BuscarPorIdAsync(id);
+        if (produto == null)
+            return NotFound("Produto não encontrado.");
 
-        //    Produto produto = new Produto()
-        //    {
-        //        Titulo = "Camisa Polo Masculina",
-        //        IdLoja = loja.Id,
-        //        IdCategoriaProduto = 2,
-        //        ValorUnitario = 99.90m,
-        //        Estoque = 50,
-        //        Sku = "CAM-POLO-001",
-        //        Imagem = "https://exemplo.com/imagens/camisa-polo.jpg",
-        //        Ativo = 1,
-        //        Peso = 0.3m,
-        //        Altura = 2.0m,
-        //        Largura = 30.0m,
-        //        Profundidade = 25.0m,
-        //        Descricao = "Camisa polo 100% algodão, confortável e estilosa."
-        //    };
-        //    _context.Produto.Add(produto);
-        //    await _context.SaveChangesAsync();
+        produto.Titulo = model.Titulo;
+        produto.ValorUnitario = model.ValorUnitario;
+        produto.Estoque = model.Estoque;
+        produto.Sku = model.Sku;
+        produto.Imagem = model.Imagem;
+        produto.Ativo = model.Ativo;
+        produto.Peso = model.Peso;
+        produto.Altura = model.Altura;
+        produto.Largura = model.Largura;
+        produto.Profundidade = model.Profundidade;
+        produto.Descricao = model.Descricao;
 
-        //    return Ok(new { message = "Cadastro de produto realizado com sucesso!" });
-        //}
+        await _produtoRepo.AtualizarAsync(produto);
+
+        return Ok(new { message = "Produto atualizado com sucesso." });
+    }
+
+    [HttpDelete("excluir/{id}")]
+    public async Task<IActionResult> Remover(int id)
+    {
+        var produto = await _produtoRepo.BuscarPorIdAsync(id);
+        if (produto == null)
+            return NotFound("Produto não encontrado.");
+
+        await _produtoRepo.RemoverAsync(produto);
+        return Ok(new { message = "Produto removido com sucesso." });
     }
 }

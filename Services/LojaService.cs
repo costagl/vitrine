@@ -1,7 +1,7 @@
 ﻿using System;
 using VitrineApi.Data;
 using VitrineApi.Interfaces;
-using VitrineApi.Dtos;
+using VitrineApi.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 public class LojaService : ILojaService
@@ -13,17 +13,17 @@ public class LojaService : ILojaService
         _context = context;
     }
 
-    public async Task<LojaDto> BuscarPorSubdominio(string subdominio)
+    public async Task<LojaDTO> BuscarPorSubdominio(string subdominio)
     {
         var loja = await _context.Loja
             .Where(l => l.Subdominio == subdominio)
-            .Select(l => new LojaDto
+            .Select(l => new LojaDTO
             {
                 Id = l.Id,
                 NomeLoja = l.NomeLoja,
                 CategoriaLoja = l.CategoriaLoja,
-                Tema = l.Tema,
-                Layout = l.Layout,
+                IdTema = l.IdTema,
+                IdLayout = l.IdLayout,
                 Subdominio = l.Subdominio,
                 Cpf = l.Cpf,
                 Cnpj = l.Cnpj

@@ -8,35 +8,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace VitrineApi.Models;
 
+[Index("Cpf", Name = "IX_Loja_Cpf")]
 public partial class Loja
 {
     [Key]
     public int Id { get; set; }
 
     [Required]
-    [StringLength(100)]
-    [Unicode(false)]
-    public string Subdominio { get; set; }
-
-    [Required]
     [StringLength(255)]
-    [Unicode(false)]
     public string NomeLoja { get; set; }
 
     [Required]
     [StringLength(100)]
-    [Unicode(false)]
     public string CategoriaLoja { get; set; }
 
-    [Required]
-    [StringLength(100)]
-    [Unicode(false)]
-    public string Tema { get; set; }
+    public int IdTema { get; set; }
 
-    [Required]
-    [StringLength(100)]
-    [Unicode(false)]
-    public string Layout { get; set; }
+    public int IdLayout { get; set; }
 
     [Required]
     [StringLength(11)]
@@ -47,9 +35,21 @@ public partial class Loja
     [Unicode(false)]
     public string Cnpj { get; set; }
 
+    [Required]
+    [StringLength(100)]
+    public string Subdominio { get; set; }
+
     [ForeignKey("Cpf")]
     [InverseProperty("Loja")]
     public virtual Lojista CpfNavigation { get; set; }
+
+    [ForeignKey("IdLayout")]
+    [InverseProperty("Loja")]
+    public virtual Layout IdLayoutNavigation { get; set; }
+
+    [ForeignKey("IdTema")]
+    [InverseProperty("Loja")]
+    public virtual Tema IdTemaNavigation { get; set; }
 
     [InverseProperty("IdLojaNavigation")]
     public virtual ICollection<Produto> Produto { get; set; } = new List<Produto>();

@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace VitrineApi.Models;
 
+[Index("IdCategoriaProduto", Name = "IX_Produto_IdCategoriaProduto")]
+[Index("IdLoja", Name = "IX_Produto_IdLoja")]
 public partial class Produto
 {
     [Key]
@@ -20,10 +22,10 @@ public partial class Produto
 
     public int IdLoja { get; set; }
 
-    [Column(TypeName = "decimal(10, 2)")]
+    [Column(TypeName = "decimal(10, 4)")]
     public decimal ValorUnitario { get; set; }
 
-    [Column(TypeName = "decimal(10, 2)")]
+    [Column(TypeName = "decimal(10, 4)")]
     public decimal? ValorPromocional { get; set; }
 
     public int Estoque { get; set; }
@@ -65,4 +67,7 @@ public partial class Produto
     [ForeignKey("IdLoja")]
     [InverseProperty("Produto")]
     public virtual Loja IdLojaNavigation { get; set; }
+
+    [InverseProperty("IdProdutoNavigation")]
+    public virtual ICollection<ItensPedido> ItensPedido { get; set; } = new List<ItensPedido>();
 }

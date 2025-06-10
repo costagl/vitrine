@@ -11,9 +11,10 @@ public class LojaMiddleware
 
     public async Task InvokeAsync(HttpContext context, ILojaService lojaService)
     {
-        var host = context.Request.Host.Host; // exemplo: loja123.vitrine.com
+        var host = context.Request.Host.Host;
 
-        if (host == "localhost")
+        // Ignora durante testes com ngrok ou localhost
+        if (host.Contains("localhost") || host.Contains("ngrok-free.app"))
         {
             await _next(context);
             return;
@@ -33,4 +34,5 @@ public class LojaMiddleware
 
         await _next(context);
     }
+
 }

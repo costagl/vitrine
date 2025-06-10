@@ -21,7 +21,7 @@ namespace VitrineApi.ViewModels
         public string ConfirmarSenha { get; set; }
         public string Cpf { get; set; }
         public string DataNascimento { get; set; }
-        public string Celular { get; set; }
+        public string Telefone { get; set; }
         public string Cnpj { get; set; }
         public string NomeLoja { get; set; }
         public string CategoriaVenda { get; set; }

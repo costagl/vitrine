@@ -1,8 +1,8 @@
-﻿using VitrineApi.Dtos;
+﻿using VitrineApi.DTOs;
 
 namespace VitrineApi.Interfaces;
 
 public interface ILojaService
 {
-    Task<LojaDto> BuscarPorSubdominio(string subdominio);
+    Task<LojaDTO> BuscarPorSubdominio(string subdominio);
 }

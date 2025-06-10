@@ -1,13 +1,13 @@
-﻿namespace VitrineApi.Dtos
+﻿namespace VitrineApi.DTOs
 {
-    public class LojaDto
+    public class LojaDTO
     {
         public int Id { get; set; }
         public string Subdominio { get; set; }
         public string NomeLoja { get; set; }
         public string CategoriaLoja { get; set; }
-        public string Tema { get; set; }
-        public string Layout { get; set; }
+        public int IdTema { get; set; }
+        public int IdLayout { get; set; }
         public string Cpf { get; set; }
         public string Cnpj { get; set; }
     }

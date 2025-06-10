@@ -19,6 +19,22 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Cliente]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EnderecoEntrega]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ItensPedido]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Layout]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Loja]",
          "ObjectType": 0
       },
@@ -27,7 +43,15 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Pedido]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Produto]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Tema]",
          "ObjectType": 0
       }
    ],

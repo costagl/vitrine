@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace VitrineApi.Models;
@@ -18,14 +17,13 @@ public partial class Lojista
 
     [Required]
     [StringLength(255)]
-    [Unicode(false)]
     public string NomeCompleto { get; set; }
 
     public DateOnly DataNascimento { get; set; }
 
-    [StringLength(11)]
+    [StringLength(20)]
     [Unicode(false)]
-    public string Celular { get; set; }
+    public string Telefone { get; set; }
 
     [Required]
     [StringLength(255)]

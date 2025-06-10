@@ -1,8 +1,45 @@
 [
   {
-    "ContainingType": "VitrineApi.Controllers.AccountController",
-    "Method": "ApiHealth",
-    "RelativePath": "api/Account/health",
+    "ContainingType": "PedidoController",
+    "Method": "AtualizarPedido",
+    "RelativePath": "api/pedido/atualizar/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "model",
+        "Type": "VitrineApi.Models.Pedido",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PedidoController",
+    "Method": "CadastrarPedido",
+    "RelativePath": "api/pedido/cadastrar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "VitrineApi.Models.Pedido",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PedidoController",
+    "Method": "ListarPedidos",
+    "RelativePath": "api/pedido/listar",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -10,67 +47,62 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.AccountController",
-    "Method": "Login",
-    "RelativePath": "api/Account/login",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "model",
-        "Type": "VitrineApi.ViewModels.LoginViewModel",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "VitrineApi.Controllers.AccountController",
-    "Method": "Logout",
-    "RelativePath": "api/Account/logout",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "VitrineApi.Controllers.AccountController",
-    "Method": "Register",
-    "RelativePath": "api/Account/register",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "model",
-        "Type": "VitrineApi.ViewModels.RegisterViewModel",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "VitrineApi.Controllers.AccountController",
-    "Method": "VerificarSubdominioExistente",
-    "RelativePath": "api/Account/verify-subdomain",
+    "ContainingType": "PedidoController",
+    "Method": "ObterPedidoPorId",
+    "RelativePath": "api/pedido/listar/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "subdominio",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.ProdutoController",
-    "Method": "CadastrarProduto",
-    "RelativePath": "api/Produto/cadastrar-produto",
+    "ContainingType": "PedidoController",
+    "Method": "RemoverPedido",
+    "RelativePath": "api/pedido/remover/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProdutoController",
+    "Method": "Atualizar",
+    "RelativePath": "produto/alterar/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "model",
+        "Type": "VitrineApi.Models.Produto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProdutoController",
+    "Method": "Cadastrar",
+    "RelativePath": "produto/cadastrar",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -84,9 +116,93 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.ProdutoController",
-    "Method": "CadastrarProdutoTeste",
-    "RelativePath": "api/Produto/cadastrar-produto-teste",
+    "ContainingType": "ProdutoController",
+    "Method": "Remover",
+    "RelativePath": "produto/excluir/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProdutoController",
+    "Method": "Listar",
+    "RelativePath": "produto/listar",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProdutoController",
+    "Method": "Buscar",
+    "RelativePath": "produto/listar/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VitrineApi.Controllers.ContaController",
+    "Method": "Register",
+    "RelativePath": "usuario/cadastrar",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "VitrineApi.ViewModels.RegisterViewModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VitrineApi.Controllers.ContaController",
+    "Method": "ApiHealth",
+    "RelativePath": "usuario/health",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VitrineApi.Controllers.ContaController",
+    "Method": "Login",
+    "RelativePath": "usuario/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "VitrineApi.ViewModels.LoginViewModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VitrineApi.Controllers.ContaController",
+    "Method": "Logout",
+    "RelativePath": "usuario/logout",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -94,13 +210,19 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.ProdutoController",
-    "Method": "CadastrarProdutoGet",
-    "RelativePath": "api/Produto/cadastrar-produto-teste-get",
-    "HttpMethod": "GET",
+    "ContainingType": "VitrineApi.Controllers.ContaController",
+    "Method": "VerificarSubdominioExistente",
+    "RelativePath": "usuario/verificar-subdominio",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "VitrineApi.ViewModels.SubdominioRequest",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
