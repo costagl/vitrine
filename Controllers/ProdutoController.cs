@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using VitrineApi.Data;
 using VitrineApi.DTOs;
@@ -7,6 +8,7 @@ using VitrineApi.Models;
 
 [ApiController]
 [Route("produto")]
+[Authorize]
 public class ProdutoController : ControllerBase
 {
     private readonly IRepositoryBase<Produto> _produtoRepo;
@@ -64,14 +66,26 @@ public class ProdutoController : ControllerBase
         return Ok(new { message = "Produto cadastrado com sucesso!", produto = dto });
     }
 
+    [Authorize]
+    [HttpGet("debug-token")]
+    public IActionResult DebugToken()
+    {
+        var claims = User.Claims.Select(c => new { c.Type, c.Value });
+        return Ok(claims);
+    }
+
     [HttpGet("listar")]
     public async Task<IActionResult> Listar()
     {
         var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+
+        if (user == null)
+            return NotFound(new { message = "Usuário não encontrado." });
+
         var loja = _context.Loja.FirstOrDefault(c => c.Cpf == user.Cpf);
 
         if (loja == null)
-            return NotFound("Loja não encontrada.");
+            return NotFound(new { message = "Loja não encontrada." });
 
         var produtos = await _produtoRepo.ListarAsync(p => p.IdLoja == loja.Id);
         return Ok(produtos);

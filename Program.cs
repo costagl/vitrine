@@ -26,13 +26,23 @@ builder.Services.AddAuthentication(options =>
     var config = builder.Configuration;
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = false,
-        ValidateAudience = false,
+        ValidateIssuer = true,
+        ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        //ValidIssuer = config["Jwt:Issuer"],
-        //ValidAudience = config["Jwt:Audience"],
+        ValidIssuer = config["Jwt:Issuer"],
+        ValidAudience = config["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]))
+    };
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = context =>
+        {
+            context.HandleResponse();
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsync("{\"erro\":\"Token inválido ou ausente\"}");
+        }
     };
 });
 
@@ -42,13 +52,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        //policy.WithOrigins(allowedOrigin, "http://localhost:3000")
-        //      .AllowAnyHeader()
-        //      .AllowAnyMethod()
-        //      .AllowCredentials();
-        policy.AllowAnyOrigin() 
+        policy.WithOrigins(allowedOrigin, "http://localhost:3000")
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
+        //policy.AllowAnyOrigin() 
+        //      .AllowAnyHeader()
+        //      .AllowAnyMethod();
     });
 });
 
@@ -57,7 +67,8 @@ builder.Services.AddCors(options =>
 //options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineDB")));
 
 builder.Services.AddDbContext<VitrineDBContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineDB")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineDB"))
+           .EnableSensitiveDataLogging()); // DESATIVAR EM PRODUÇÃO
 
 builder.Services.AddIdentity<LojistaAuth, IdentityRole>(options =>
 {
@@ -73,7 +84,32 @@ builder.Services.AddIdentity<LojistaAuth, IdentityRole>(options =>
     .AddEntityFrameworkStores<VitrineDBContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddControllers();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.LoginPath = "/forbidden"; // qualquer rota inexistente ou customizada
+    options.AccessDeniedPath = "/forbidden";
+    options.SlidingExpiration = true;
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = 401;
+        return Task.CompletedTask;
+    };
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        context.Response.StatusCode = 403;
+        return Task.CompletedTask;
+    };
+});
+
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -95,10 +131,23 @@ app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 
 app.UseRouting();
-app.UseMiddleware<LojaMiddleware>();
+
+
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == 401 && !context.Response.HasStarted)
+    {
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync("{\"erro\":\"Não autorizado\"}");
+    }
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<LojaMiddleware>();
 
 app.MapControllers();
 

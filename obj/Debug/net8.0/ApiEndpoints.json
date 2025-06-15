@@ -2,7 +2,7 @@
   {
     "ContainingType": "PedidoController",
     "Method": "AtualizarPedido",
-    "RelativePath": "api/pedido/atualizar/{id}",
+    "RelativePath": "pedido/atualizar/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -23,7 +23,7 @@
   {
     "ContainingType": "PedidoController",
     "Method": "CadastrarPedido",
-    "RelativePath": "api/pedido/cadastrar",
+    "RelativePath": "pedido/cadastrar",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -39,7 +39,7 @@
   {
     "ContainingType": "PedidoController",
     "Method": "ListarPedidos",
-    "RelativePath": "api/pedido/listar",
+    "RelativePath": "pedido/listar",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -49,7 +49,7 @@
   {
     "ContainingType": "PedidoController",
     "Method": "ObterPedidoPorId",
-    "RelativePath": "api/pedido/listar/{id}",
+    "RelativePath": "pedido/listar/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -65,7 +65,7 @@
   {
     "ContainingType": "PedidoController",
     "Method": "RemoverPedido",
-    "RelativePath": "api/pedido/remover/{id}",
+    "RelativePath": "pedido/remover/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -113,6 +113,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProdutoController",
+    "Method": "DebugToken",
+    "RelativePath": "produto/debug-token",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

@@ -36,6 +36,7 @@ namespace VitrineApi.Controllers
 
         private string GenerateJwtToken(IdentityUser user)
         {
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),

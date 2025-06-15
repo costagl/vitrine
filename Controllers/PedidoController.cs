@@ -3,7 +3,7 @@ using VitrineApi.Interfaces;
 using VitrineApi.Models;
 
 [ApiController]
-[Route("api/pedido")]
+[Route("/pedido")]
 public class PedidoController : ControllerBase
 {
     private readonly IRepositoryBase<Pedido> _pedidoRepository;
