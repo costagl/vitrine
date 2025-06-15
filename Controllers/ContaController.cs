@@ -57,7 +57,6 @@ namespace VitrineApi.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
@@ -100,8 +99,6 @@ namespace VitrineApi.Controllers
 
             return Unauthorized(new { message = "E-mail ou senha inválidos." });
         }
-
-
 
         [HttpPost("cadastrar")]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)

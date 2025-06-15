@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,9 +19,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
+.AddCookie()
 .AddJwtBearer(options =>
 {
     var config = builder.Configuration;
@@ -46,44 +48,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-var allowedOrigin = builder.Configuration["Jwt:Audience"];
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy", policy =>
-    {
-        policy.WithOrigins(allowedOrigin, "http://localhost:3000")
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
-        //policy.AllowAnyOrigin() 
-        //      .AllowAnyHeader()
-        //      .AllowAnyMethod();
-    });
-});
-
-
-//builder.Services.AddDbContext<UserAuthDbContext>(options =>
-//options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineDB")));
-
-builder.Services.AddDbContext<VitrineDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineDB"))
-           .EnableSensitiveDataLogging()); // DESATIVAR EM PRODUÇÃO
-
-builder.Services.AddIdentity<LojistaAuth, IdentityRole>(options =>
-{
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 8;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireLowercase = false;
-    options.User.RequireUniqueEmail = true;
-    options.SignIn.RequireConfirmedAccount = false;
-    options.SignIn.RequireConfirmedEmail = false;
-    options.SignIn.RequireConfirmedPhoneNumber = false;
-})
-    .AddEntityFrameworkStores<VitrineDBContext>()
-    .AddDefaultTokenProviders();
-
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
@@ -103,6 +67,39 @@ builder.Services.ConfigureApplicationCookie(options =>
     };
 });
 
+var allowedOrigin = builder.Configuration["Jwt:Audience"];
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.WithOrigins(allowedOrigin, "http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+        //policy.AllowAnyOrigin() 
+        //      .AllowAnyHeader()
+        //      .AllowAnyMethod();
+    });
+});
+
+builder.Services.AddDbContext<VitrineDBContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineDB"))
+           .EnableSensitiveDataLogging()); // DESATIVAR EM PRODUÇÃO
+
+builder.Services.AddIdentity<LojistaAuth, IdentityRole>(options =>
+{
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedEmail = false;
+    options.SignIn.RequireConfirmedPhoneNumber = false;
+})
+    .AddEntityFrameworkStores<VitrineDBContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -135,6 +132,20 @@ app.UseRouting();
 
 app.Use(async (context, next) =>
 {
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync($"{{\"erro\":\"{ex.Message}\"}}");
+    }
+});
+
+app.Use(async (context, next) =>
+{
     await next();
 
     if (context.Response.StatusCode == 401 && !context.Response.HasStarted)
@@ -143,6 +154,8 @@ app.Use(async (context, next) =>
         await context.Response.WriteAsync("{\"erro\":\"Não autorizado\"}");
     }
 });
+
+
 
 app.UseAuthentication();
 app.UseAuthorization();

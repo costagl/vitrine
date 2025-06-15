@@ -8,7 +8,6 @@ using VitrineApi.Models;
 
 [ApiController]
 [Route("produto")]
-[Authorize]
 public class ProdutoController : ControllerBase
 {
     private readonly IRepositoryBase<Produto> _produtoRepo;
@@ -74,6 +73,7 @@ public class ProdutoController : ControllerBase
         return Ok(claims);
     }
 
+    [Authorize]
     [HttpGet("listar")]
     public async Task<IActionResult> Listar()
     {
