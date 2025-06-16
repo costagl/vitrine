@@ -7,9 +7,13 @@ using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
+using System.Text.Json.Serialization;
 using VitrineApi.Data;
 using VitrineApi.Interfaces;
 using VitrineApi.Models;
+using VitrineApi.Mappings;
+using AutoMapper;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -104,10 +108,15 @@ builder.Services.AddIdentity<LojistaAuth, IdentityRole>(options =>
     .AddEntityFrameworkStores<VitrineDBContext>()
     .AddDefaultTokenProviders();
 
+//builder.Services.AddControllers()
+//    .AddJsonOptions(options =>
+//    {
+//        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+//    });
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -116,6 +125,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ILojaService, LojaService>();
 builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 

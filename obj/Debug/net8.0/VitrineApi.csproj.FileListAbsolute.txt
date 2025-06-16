@@ -279,3 +279,4 @@ C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\Vit
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.pdb
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.genruntimeconfig.cache
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\ref\VitrineApi.dll
+C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\bin\Debug\net8.0\AutoMapper.dll

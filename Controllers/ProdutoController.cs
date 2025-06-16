@@ -6,6 +6,8 @@ using VitrineApi.Data;
 using VitrineApi.DTOs;
 using VitrineApi.Interfaces;
 using VitrineApi.Models;
+using VitrineApi.Mappings;
+using AutoMapper;
 
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
@@ -13,14 +15,18 @@ using VitrineApi.Models;
 public class ProdutoController : ControllerBase
 {
     private readonly IRepositoryBase<Produto> _produtoRepo;
+    private readonly IRepositoryBase<CategoriaProduto> _categoriaRepo;
     private readonly UserManager<LojistaAuth> _userManager;
     private readonly VitrineDBContext _context;
+    private readonly IMapper _mapper;
 
-    public ProdutoController(IRepositoryBase<Produto> produtoRepo, UserManager<LojistaAuth> userManager, VitrineDBContext context)
+    public ProdutoController(IRepositoryBase<Produto> produtoRepo, IRepositoryBase<CategoriaProduto> categoriaRepo, UserManager<LojistaAuth> userManager, VitrineDBContext context, IMapper mapper)
     {
         _produtoRepo = produtoRepo;
+        _categoriaRepo = categoriaRepo;
         _userManager = userManager;
         _context = context;
+        _mapper = mapper;
     }
 
     [HttpPost("cadastrar")]
@@ -88,7 +94,18 @@ public class ProdutoController : ControllerBase
             return NotFound(new { message = "Loja não encontrada." });
 
         var produtos = await _produtoRepo.ListarAsync(p => p.IdLoja == loja.Id);
-        return Ok(produtos);
+
+        var produtosDto = _mapper.Map<List<ProdutoDTO>>(produtos);
+
+        return Ok(produtosDto);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("listar-categoria")]
+    public async Task<IActionResult> ListarCategorias()
+    {
+        var categoria = await _categoriaRepo.ListarAsync();
+        return Ok(categoria);
     }
 
     [HttpGet("listar/{id}")]

@@ -153,6 +153,16 @@
   },
   {
     "ContainingType": "ProdutoController",
+    "Method": "ListarCategorias",
+    "RelativePath": "produto/listar-categoria",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProdutoController",
     "Method": "Buscar",
     "RelativePath": "produto/listar/{id}",
     "HttpMethod": "GET",
