@@ -13,59 +13,62 @@ using VitrineApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//Add services to the container.
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddCookie()
-.AddJwtBearer(options =>
-{
-    var config = builder.Configuration;
-    options.TokenValidationParameters = new TokenValidationParameters
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = config["Jwt:Issuer"],
-        ValidAudience = config["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]))
-    };
-    options.Events = new JwtBearerEvents
-    {
-        OnChallenge = context =>
+        var config = builder.Configuration;
+        options.TokenValidationParameters = new TokenValidationParameters
         {
-            context.HandleResponse();
-            context.Response.StatusCode = 401;
-            context.Response.ContentType = "application/json";
-            return context.Response.WriteAsync("{\"erro\":\"Token inválido ou ausente\"}");
-        }
-    };
-});
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = config["Jwt:Issuer"],
+            ValidAudience = config["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]))
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = context =>
+            {
+                context.HandleResponse();
+                context.Response.StatusCode = 401;
+                context.Response.ContentType = "application/json";
+                return context.Response.WriteAsync("{\"erro\":\"Token inválido ou ausente\"}");
+            }
+        };
+    })
+    .AddCookie();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-    options.LoginPath = "/forbidden"; // qualquer rota inexistente ou customizada
-    options.AccessDeniedPath = "/forbidden";
+    options.LoginPath = "/usuario/login"; // qualquer rota inexistente ou customizada
+    options.AccessDeniedPath = "/usuario/login";
     options.SlidingExpiration = true;
+
     options.Events.OnRedirectToLogin = context =>
     {
         context.Response.StatusCode = 401;
-        return Task.CompletedTask;
+        context.Response.ContentType = "application/json";
+
+        return context.Response.WriteAsync("{\"erro\":\"Não autorizado - login requerido\"}");
     };
+
     options.Events.OnRedirectToAccessDenied = context =>
     {
         context.Response.StatusCode = 403;
-        return Task.CompletedTask;
+        context.Response.ContentType = "application/json";
+
+        return context.Response.WriteAsync("{\"erro\":\"Acesso negado\"}");
     };
 });
+
 
 var allowedOrigin = builder.Configuration["Jwt:Audience"];
 

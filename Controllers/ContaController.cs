@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +13,7 @@ using VitrineApi.ViewModels;
 
 namespace VitrineApi.Controllers
 {
+    [AllowAnonymous]
     [Route("usuario")]
     [ApiController]
     public class ContaController : Controller
@@ -39,7 +42,7 @@ namespace VitrineApi.Controllers
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 

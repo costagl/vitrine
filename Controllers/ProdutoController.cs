@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using VitrineApi.Data;
@@ -6,6 +7,7 @@ using VitrineApi.DTOs;
 using VitrineApi.Interfaces;
 using VitrineApi.Models;
 
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController]
 [Route("produto")]
 public class ProdutoController : ControllerBase
@@ -65,7 +67,6 @@ public class ProdutoController : ControllerBase
         return Ok(new { message = "Produto cadastrado com sucesso!", produto = dto });
     }
 
-    [Authorize]
     [HttpGet("debug-token")]
     public IActionResult DebugToken()
     {
@@ -73,7 +74,6 @@ public class ProdutoController : ControllerBase
         return Ok(claims);
     }
 
-    [Authorize]
     [HttpGet("listar")]
     public async Task<IActionResult> Listar()
     {
