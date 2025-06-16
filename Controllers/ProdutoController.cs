@@ -47,7 +47,7 @@ public class ProdutoController : ControllerBase
             return BadRequest("Loja não encontrada para o usuário.");
 
         model.IdLoja = loja.Id;
-        model.IdCategoriaProduto = 2; // Sem Categoria
+        // model.IdCategoriaProduto = 2; // Sem Categoria
 
         var dto = new ProdutoDTO
         {
@@ -135,6 +135,7 @@ public class ProdutoController : ControllerBase
         produto.Largura = model.Largura;
         produto.Profundidade = model.Profundidade;
         produto.Descricao = model.Descricao;
+        produto.IdCategoriaProduto = model.IdCategoriaProduto;
 
         await _produtoRepo.AtualizarAsync(produto);
 
