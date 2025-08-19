@@ -17,5 +17,6 @@
         public decimal Largura { get; set; }
         public decimal Profundidade { get; set; }
         public int IdCategoriaProduto { get; set; }
+        public string NomeCategoriaProduto { get; set; }
     }
 }

@@ -1,11 +1,1 @@
-{
-  "Version": 1,
-  "Hash": "CPLLvw1hcIDELtHxfNMs1FTxTJ9wEBsgEd/RQ2yjU5M=",
-  "Source": "VitrineApi",
-  "BasePath": "_content/VitrineApi",
-  "Mode": "Default",
-  "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
-}
+{"Version":1,"Hash":"iffMTXl3xERLV8Yamzk/oPFlt3jUnoiDwUVSIlFITtM=","Source":"VitrineApi","BasePath":"_content/VitrineApi","Mode":"Default","ManifestType":"Build","ReferencedProjectsConfiguration":[],"DiscoveryPatterns":[],"Assets":[],"Endpoints":[]}

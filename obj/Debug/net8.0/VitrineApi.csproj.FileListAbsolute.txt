@@ -99,7 +99,6 @@ C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\Vit
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\bin\Debug\net8.0\System.Composition.TypedParts.dll
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\bin\Debug\net8.0\System.Drawing.Common.dll
-C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\bin\Debug\net8.0\System.Formats.Asn1.dll
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\bin\Debug\net8.0\System.Memory.Data.dll
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\bin\Debug\net8.0\System.Reflection.MetadataLoadContext.dll
@@ -267,11 +266,6 @@ C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\Vit
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.sourcelink.json
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\staticwebassets.development.json
-C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\staticwebassets\msbuild.VitrineApi.Microsoft.AspNetCore.StaticWebAssets.props
-C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\staticwebassets\msbuild.build.VitrineApi.props
-C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.VitrineApi.props
-C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.VitrineApi.props
-C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\staticwebassets.pack.json
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\scopedcss\bundle\VitrineApi.styles.css
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.csproj.Up2Date
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.dll
@@ -280,3 +274,11 @@ C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\Vit
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.genruntimeconfig.cache
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\ref\VitrineApi.dll
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\bin\Debug\net8.0\VitrineApi.staticwebassets.endpoints.json
+C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\rjimswa.dswa.cache.json
+C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\staticwebassets.build.json.cache
+C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\Gabriel\Documents\principal\estudo\faculdade\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
