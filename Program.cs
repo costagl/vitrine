@@ -1,18 +1,13 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
-using System;
+using NuGet.Common;
 using System.Text;
 using System.Text.Json.Serialization;
 using VitrineApi.Data;
 using VitrineApi.Interfaces;
-using VitrineApi.Models;
 using VitrineApi.Mappings;
-using AutoMapper;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +32,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
         options.Events = new JwtBearerEvents
         {
+            OnMessageReceived = context =>
+            {
+                var token = context.Request.Headers["Authorization"].ToString();
+                token = token.Replace("\\", "").Replace("\"", "");
+                context.Request.Headers["Authorization"] = token;
+                return Task.CompletedTask;
+            },
             OnChallenge = context =>
             {
                 context.HandleResponse();
@@ -105,6 +107,7 @@ builder.Services.AddIdentity<LojistaAuth, IdentityRole>(options =>
     options.SignIn.RequireConfirmedEmail = false;
     options.SignIn.RequireConfirmedPhoneNumber = false;
 })
+    .AddPasswordValidator<CustomPasswordValidator>()
     .AddEntityFrameworkStores<VitrineDBContext>()
     .AddDefaultTokenProviders();
 
@@ -119,14 +122,15 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ILojaService, LojaService>();
 builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(cfg => {
+    cfg.AddProfile<MappingProfile>();
+});
 
 var app = builder.Build();
 
@@ -168,8 +172,6 @@ app.Use(async (context, next) =>
         await context.Response.WriteAsync("{\"erro\":\"Não autorizado\"}");
     }
 });
-
-
 
 app.UseAuthentication();
 app.UseAuthorization();

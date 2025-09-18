@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Gabriel\\Documents\\principal\\estudo\\faculdade\\projeto_tcc\\VitrineApi\\VitrineApi\\VitrineApi.csproj": {}
+    "C:\\Users\\Gabriel\\Documents\\principal\\estudo\\faculdade\\projetos\\projeto_tcc\\VitrineApi\\VitrineApi\\VitrineApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Gabriel\\Documents\\principal\\estudo\\faculdade\\projeto_tcc\\VitrineApi\\VitrineApi\\VitrineApi.csproj": {
+    "C:\\Users\\Gabriel\\Documents\\principal\\estudo\\faculdade\\projetos\\projeto_tcc\\VitrineApi\\VitrineApi\\VitrineApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Gabriel\\Documents\\principal\\estudo\\faculdade\\projeto_tcc\\VitrineApi\\VitrineApi\\VitrineApi.csproj",
+        "projectUniqueName": "C:\\Users\\Gabriel\\Documents\\principal\\estudo\\faculdade\\projetos\\projeto_tcc\\VitrineApi\\VitrineApi\\VitrineApi.csproj",
         "projectName": "VitrineApi",
-        "projectPath": "C:\\Users\\Gabriel\\Documents\\principal\\estudo\\faculdade\\projeto_tcc\\VitrineApi\\VitrineApi\\VitrineApi.csproj",
+        "projectPath": "C:\\Users\\Gabriel\\Documents\\principal\\estudo\\faculdade\\projetos\\projeto_tcc\\VitrineApi\\VitrineApi\\VitrineApi.csproj",
         "packagesPath": "C:\\Users\\Gabriel\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Gabriel\\Documents\\principal\\estudo\\faculdade\\projeto_tcc\\VitrineApi\\VitrineApi\\obj\\",
+        "outputPath": "C:\\Users\\Gabriel\\Documents\\principal\\estudo\\faculdade\\projetos\\projeto_tcc\\VitrineApi\\VitrineApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -52,41 +52,45 @@
           "dependencies": {
             "AutoMapper": {
               "target": "Package",
-              "version": "[14.0.0, )"
+              "version": "[15.0.1, )"
             },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
-              "version": "[8.0.8, )",
+              "version": "[8.0.19, )",
               "noWarn": [
                 "NU1605"
               ]
             },
             "Microsoft.AspNetCore.Authentication.OpenIdConnect": {
               "target": "Package",
-              "version": "[8.0.8, )",
+              "version": "[8.0.19, )",
               "noWarn": [
                 "NU1605"
               ]
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[8.0.16, )"
+              "version": "[8.0.19, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.19, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.16, )"
+              "version": "[8.0.19, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[8.0.16, )"
+              "version": "[8.0.19, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.16, )"
+              "version": "[8.0.19, )"
             },
             "Microsoft.Identity.Web": {
               "target": "Package",
@@ -124,7 +128,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -26,17 +26,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginViewModel"
+                "$ref": "#/components/schemas/LoginVM"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginViewModel"
+                "$ref": "#/components/schemas/LoginVM"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginViewModel"
+                "$ref": "#/components/schemas/LoginVM"
               }
             }
           }
@@ -57,17 +57,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterViewModel"
+                "$ref": "#/components/schemas/RegisterVM"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterViewModel"
+                "$ref": "#/components/schemas/RegisterVM"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/RegisterViewModel"
+                "$ref": "#/components/schemas/RegisterVM"
               }
             }
           }
@@ -100,21 +100,45 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SubdominioRequest"
+                "$ref": "#/components/schemas/VerificarSubdominioVM"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/SubdominioRequest"
+                "$ref": "#/components/schemas/VerificarSubdominioVM"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/SubdominioRequest"
+                "$ref": "#/components/schemas/VerificarSubdominioVM"
               }
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/usuario/verificar-layout-tema": {
+      "get": {
+        "tags": [
+          "Conta"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/DevUtils/adicionar-categorias": {
+      "post": {
+        "tags": [
+          "DevUtils"
+        ],
         "responses": {
           "200": {
             "description": "Success"
@@ -709,7 +733,7 @@
         },
         "additionalProperties": false
       },
-      "LoginViewModel": {
+      "LoginVM": {
         "required": [
           "email",
           "senha"
@@ -1010,7 +1034,7 @@
         },
         "additionalProperties": false
       },
-      "RegisterViewModel": {
+      "RegisterVM": {
         "required": [
           "confirmarSenha",
           "email",
@@ -1069,16 +1093,6 @@
         },
         "additionalProperties": false
       },
-      "SubdominioRequest": {
-        "type": "object",
-        "properties": {
-          "subdominio": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "Tema": {
         "required": [
           "nome"
@@ -1099,6 +1113,16 @@
             "items": {
               "$ref": "#/components/schemas/Loja"
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VerificarSubdominioVM": {
+        "type": "object",
+        "properties": {
+          "subdominio": {
+            "type": "string",
             "nullable": true
           }
         },

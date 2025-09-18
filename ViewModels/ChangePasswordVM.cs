@@ -2,7 +2,7 @@
 
 namespace VitrineApi.ViewModels
 {
-    public class ChangePasswordViewModel
+    public class ChangePasswordVM
     {
         [Required(ErrorMessage = "Email é necessário.")]
         [EmailAddress]

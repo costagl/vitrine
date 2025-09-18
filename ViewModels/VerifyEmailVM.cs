@@ -2,7 +2,7 @@
 
 namespace VitrineApi.ViewModels
 {
-    public class VerifyEmailViewModel
+    public class VerifyEmailVM
     {
         [Required(ErrorMessage = "Email é necessário.")]
         [EmailAddress]

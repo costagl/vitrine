@@ -10,6 +10,7 @@ using System.Text;
 using VitrineApi.Data;
 using VitrineApi.Models;
 using VitrineApi.ViewModels;
+using VitrineApi.ViewModels.Loja;
 
 namespace VitrineApi.Controllers
 {
@@ -61,7 +62,7 @@ namespace VitrineApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        public async Task<IActionResult> Login([FromBody] LoginVM model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -87,14 +88,16 @@ namespace VitrineApi.Controllers
                     user = new
                     {
                         id = user.Id,
-                        npme = user.UserName,
+                        nome = user.UserName,
                         email = user.Email,
                         loja = loja == null ? null : new
                         {
                             id = loja.Id,
                             nome = loja.NomeLoja,
                             categoria = loja.CategoriaLoja,
-                            subdominio = loja.Subdominio
+                            subdominio = loja.Subdominio,
+                            layoutId = loja.IdLayout,
+                            temaId = loja.IdTema
                         }
                     }
                 });
@@ -104,7 +107,7 @@ namespace VitrineApi.Controllers
         }
 
         [HttpPost("cadastrar")]
-        public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterVM model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -155,8 +158,8 @@ namespace VitrineApi.Controllers
                 {
                     NomeLoja = model.NomeLoja,
                     CategoriaLoja = model.CategoriaVenda,
-                    IdTema = 1,
-                    IdLayout = 1,
+                    IdTema = 1, // Tema Padrão
+                    IdLayout = 1, // Layout Padrão
                     Cpf = model.Cpf,
                     Cnpj = model.Cnpj,
                     Subdominio = model.Subdominio
@@ -185,17 +188,54 @@ namespace VitrineApi.Controllers
             return Ok(new { message = "Logout bem-sucedido!" });
         }
 
+        // TODO: Métodos HTTP da LOJA
 
         [HttpPost("verificar-subdominio")]
-        public async Task<IActionResult> VerificarSubdominioExistente([FromBody] SubdominioRequest request)
+        public async Task<IActionResult> VerificarSubdominioExistente([FromBody] VerificarSubdominioVM request)
         {
             if (string.IsNullOrWhiteSpace(request.Subdominio))
-                return BadRequest(new { message = "Subdomínio não pode ser vazio" });
-
+            {
+                return BadRequest(new { message = "Subdomínio não pode ser vazio." });
+            }
+                
             bool existe = (await new RepositoryBase<Loja>(_context).ListarAsync(
                 c => c.Subdominio.ToLower() == request.Subdominio.ToLower())).Any();
 
             return Ok(new { disponivel = !existe });
+        
         }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("verificar-layout-tema")]
+        public async Task<IActionResult> VerificarLayoutTema()
+        {
+            var token = Request.Headers["Authorization"];
+            Console.WriteLine("JWT recebido: " + token);
+
+            // Encontrar o usuário pelo ID (obtido do contexto de autenticação)
+            var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+
+            if (user == null)
+            {
+                return BadRequest(new { message = "Usuário não autenticado." });
+            }
+
+            string userCpf = user.Cpf;
+
+            // Buscar a loja associada ao CPF do usuário
+            var loja = await _context.Loja
+                .Where(l => l.Cpf == user.Cpf)
+                .Select(l => new { l.IdTema, l.IdLayout })
+                .FirstOrDefaultAsync();
+
+            if (loja == null)
+            {
+                return BadRequest(new { message = "Loja não encontrada para o usuário." });
+            }
+
+            // Retornar os dados do layout e tema
+            return Ok(new { loja.IdTema, loja.IdLayout });
+        }
+
     }
 }

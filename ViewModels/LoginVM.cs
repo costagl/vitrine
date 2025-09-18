@@ -2,7 +2,7 @@
 
 namespace VitrineApi.ViewModels
 {
-    public class LoginViewModel
+    public class LoginVM
     {
         [Required(ErrorMessage = "Email é necessário.")]
         [EmailAddress]

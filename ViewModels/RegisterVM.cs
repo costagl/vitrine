@@ -2,7 +2,7 @@
 
 namespace VitrineApi.ViewModels
 {
-    public class RegisterViewModel
+    public class RegisterVM
     {
         [Required(ErrorMessage = "Nome é necessário.")]
         public string Nome { get; set; }

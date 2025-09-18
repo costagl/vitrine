@@ -1,6 +1,6 @@
 ﻿namespace VitrineApi.ViewModels.Loja
 {
-    public class AdicionarProdutoViewModel
+    public class AdicionarProdutoVM
     {
     }
 }

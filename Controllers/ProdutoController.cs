@@ -32,14 +32,13 @@ public class ProdutoController : ControllerBase
     [HttpPost("cadastrar")]
     public async Task<IActionResult> Cadastrar([FromBody] Produto model)
     {
-        var userId = _userManager.GetUserId(User);
-        if (string.IsNullOrEmpty(userId))
-            return Unauthorized("Usuário não autenticado");
+        var token = Request.Headers["Authorization"];
+        Console.WriteLine("JWT recebido: " + token);
 
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User)); ;
 
         if (user == null)
-            return Unauthorized("Usuário não encontrado");
+            return Unauthorized("Usuário não autenticado");
 
         var loja = _context.Loja.FirstOrDefault(c => c.Cpf == user.Cpf);
 
@@ -80,9 +79,13 @@ public class ProdutoController : ControllerBase
         return Ok(claims);
     }
 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("listar")]
     public async Task<IActionResult> Listar()
     {
+        var token = Request.Headers["Authorization"];
+        Console.WriteLine("JWT recebido: " + token);
+
         var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
 
         if (user == null)

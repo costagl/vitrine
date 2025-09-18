@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "DevUtils.DevUtilsController",
+    "Method": "AdicionarCategoriasGenericas",
+    "RelativePath": "DevUtils/adicionar-categorias",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "PedidoController",
     "Method": "AtualizarPedido",
     "RelativePath": "pedido/atualizar/{id}",
@@ -187,7 +203,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "VitrineApi.ViewModels.RegisterViewModel",
+        "Type": "VitrineApi.ViewModels.RegisterVM",
         "IsRequired": true
       }
     ],
@@ -213,7 +229,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "VitrineApi.ViewModels.LoginViewModel",
+        "Type": "VitrineApi.ViewModels.LoginVM",
         "IsRequired": true
       }
     ],
@@ -231,6 +247,16 @@
   },
   {
     "ContainingType": "VitrineApi.Controllers.ContaController",
+    "Method": "VerificarLayoutTema",
+    "RelativePath": "usuario/verificar-layout-tema",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VitrineApi.Controllers.ContaController",
     "Method": "VerificarSubdominioExistente",
     "RelativePath": "usuario/verificar-subdominio",
     "HttpMethod": "POST",
@@ -239,7 +265,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "VitrineApi.ViewModels.SubdominioRequest",
+        "Type": "VitrineApi.ViewModels.Loja.VerificarSubdominioVM",
         "IsRequired": true
       }
     ],
