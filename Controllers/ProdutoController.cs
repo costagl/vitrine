@@ -83,8 +83,8 @@ public class ProdutoController : ControllerBase
     [HttpGet("listar")]
     public async Task<IActionResult> Listar()
     {
-        var token = Request.Headers["Authorization"];
-        Console.WriteLine("JWT recebido: " + token);
+        //var token = Request.Headers["Authorization"];
+        //Console.WriteLine("JWT recebido: " + token);
 
         var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
 

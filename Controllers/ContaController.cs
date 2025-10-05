@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using VitrineApi.Data;
+using VitrineApi.DTOs;
+using VitrineApi.Interfaces;
 using VitrineApi.Models;
 using VitrineApi.ViewModels;
 using VitrineApi.ViewModels.Loja;
@@ -19,6 +22,7 @@ namespace VitrineApi.Controllers
     [ApiController]
     public class ContaController : Controller
     {
+       
         private readonly SignInManager<LojistaAuth> _signInManager;
         private readonly UserManager<LojistaAuth> _userManager;
         private readonly IConfiguration _config;
@@ -233,9 +237,7 @@ namespace VitrineApi.Controllers
                 return BadRequest(new { message = "Loja não encontrada para o usuário." });
             }
 
-            // Retornar os dados do layout e tema
             return Ok(new { loja.IdTema, loja.IdLayout });
         }
-
     }
 }

@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using VitrineApi.Data;
 using VitrineApi.Interfaces;
 using VitrineApi.Mappings;
+using VitrineApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -77,12 +78,13 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 
 var allowedOrigin = builder.Configuration["Jwt:Audience"];
+var vercelSite = builder.Configuration["Jwt:Vercel"];
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.WithOrigins(allowedOrigin, "http://localhost:3000")
+        policy.WithOrigins(allowedOrigin, vercelSite, "http://localhost:3000")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -127,6 +129,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ILojaService, LojaService>();
 builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+builder.Services.AddScoped<RepositoryBase<Loja>>();
 
 builder.Services.AddAutoMapper(cfg => {
     cfg.AddProfile<MappingProfile>();
