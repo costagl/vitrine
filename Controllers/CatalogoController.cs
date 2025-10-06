@@ -40,6 +40,9 @@ namespace VitrineApi.Controllers
                 IdLayout = loja.IdLayout,
                 Cpf = loja.Cpf,
                 Cnpj = loja.Cnpj,
+                Avaliacao = loja.Avaliacao ?? 0,
+                Descricao = loja.Descricao,
+                Logotipo = loja.Logotipo,
 
                 CategoriaLoja = loja.IdCategoria.ToString(),
             }).ToList();

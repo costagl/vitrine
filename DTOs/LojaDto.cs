@@ -10,5 +10,8 @@
         public int IdLayout { get; set; }
         public string Cpf { get; set; }
         public string Cnpj { get; set; }
+        public string Logotipo { get; set; }
+        public string Descricao { get; set; }
+        public decimal Avaliacao { get; set; }
     }
 }
