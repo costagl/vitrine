@@ -15,7 +15,7 @@ public class RepositoryBase<T> : IRepositoryBase<T>, IDisposable where T : class
     public RepositoryBase(VitrineDBContext context)
     {
         _context = context;
-        _dbSet = context.Set<T>();
+        _dbSet = _context.Set<T>();
     }
 
     public async Task<T> IncluirAsync(T entidade)
@@ -23,6 +23,13 @@ public class RepositoryBase<T> : IRepositoryBase<T>, IDisposable where T : class
         await _dbSet.AddAsync(entidade);
         await _context.SaveChangesAsync();
         return entidade;
+    }
+
+    public async Task<List<T>> IncluirListaAsync(List<T> entidades)
+    {
+        await _dbSet.AddRangeAsync(entidades);
+        await _context.SaveChangesAsync();
+        return entidades;
     }
 
     public async Task<T?> BuscarPorIdAsync(int id)

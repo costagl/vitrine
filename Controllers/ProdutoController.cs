@@ -15,15 +15,17 @@ using AutoMapper;
 public class ProdutoController : ControllerBase
 {
     private readonly IRepositoryBase<Produto> _produtoRepo;
-    private readonly IRepositoryBase<CategoriaProduto> _categoriaRepo;
+    private readonly IRepositoryBase<CategoriaProduto> _CatProdRep;
+    private readonly IRepositoryBase<CategoriaLoja> _CatLojaRep;
     private readonly UserManager<LojistaAuth> _userManager;
     private readonly VitrineDBContext _context;
     private readonly IMapper _mapper;
 
-    public ProdutoController(IRepositoryBase<Produto> produtoRepo, IRepositoryBase<CategoriaProduto> categoriaRepo, UserManager<LojistaAuth> userManager, VitrineDBContext context, IMapper mapper)
+    public ProdutoController(IRepositoryBase<Produto> produtoRepo, IRepositoryBase<CategoriaProduto> catProdRep, IRepositoryBase<CategoriaLoja> catLojaRep, UserManager<LojistaAuth> userManager, VitrineDBContext context, IMapper mapper)
     {
         _produtoRepo = produtoRepo;
-        _categoriaRepo = categoriaRepo;
+        _CatProdRep = catProdRep;
+        _CatLojaRep = catLojaRep;
         _userManager = userManager;
         _context = context;
         _mapper = mapper;
@@ -104,11 +106,19 @@ public class ProdutoController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet("listar-categoria")]
-    public async Task<IActionResult> ListarCategorias()
+    [HttpGet("listar-categoria-produto")]
+    public async Task<IActionResult> ListarCategoriasProduto()
     {
-        var categoria = await _categoriaRepo.ListarAsync();
-        return Ok(categoria);
+        var categoriaProduto = await _CatProdRep.ListarAsync();
+        return Ok(categoriaProduto);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("listar-categoria-loja")]
+    public async Task<IActionResult> ListarCategoriasLoja()
+    {
+        var categoriaLoja = await _CatLojaRep.ListarAsync();
+        return Ok(categoriaLoja);
     }
 
     [HttpGet("listar/{id}")]

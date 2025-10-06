@@ -36,11 +36,12 @@ namespace VitrineApi.Controllers
                 Id = loja.Id,
                 Subdominio = loja.Subdominio,
                 NomeLoja = loja.NomeLoja,
-                CategoriaLoja = loja.CategoriaLoja,
                 IdTema = loja.IdTema,
                 IdLayout = loja.IdLayout,
                 Cpf = loja.Cpf,
-                Cnpj = loja.Cnpj
+                Cnpj = loja.Cnpj,
+
+                CategoriaLoja = loja.IdCategoria.ToString(),
             }).ToList();
 
             return Ok(new { lojas = lojasDTO });
@@ -60,7 +61,7 @@ namespace VitrineApi.Controllers
                 Id = loja.Id,
                 Subdominio = loja.Subdominio,
                 NomeLoja = loja.NomeLoja,
-                CategoriaLoja = loja.CategoriaLoja,
+                CategoriaLoja = loja.IdCategoriaNavigation.Titulo,
                 IdTema = loja.IdTema,
                 IdLayout = loja.IdLayout,
                 Cpf = loja.Cpf,

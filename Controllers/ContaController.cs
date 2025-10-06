@@ -98,7 +98,7 @@ namespace VitrineApi.Controllers
                         {
                             id = loja.Id,
                             nome = loja.NomeLoja,
-                            categoria = loja.CategoriaLoja,
+                            categoria = loja.IdCategoria,
                             subdominio = loja.Subdominio,
                             layoutId = loja.IdLayout,
                             temaId = loja.IdTema
@@ -161,9 +161,9 @@ namespace VitrineApi.Controllers
                 var loja = new Loja
                 {
                     NomeLoja = model.NomeLoja,
-                    CategoriaLoja = model.CategoriaVenda,
-                    IdTema = 1, // Tema Padrão
-                    IdLayout = 1, // Layout Padrão
+                    IdCategoria = model.IdCategoriaLoja,
+                    IdTema = 1002, // Tema 1 (Padrão)
+                    IdLayout = 1002, // Layout 1 (Padrão)
                     Cpf = model.Cpf,
                     Cnpj = model.Cnpj,
                     Subdominio = model.Subdominio

@@ -24,7 +24,7 @@ namespace VitrineApi.ViewModels
         public string Telefone { get; set; }
         public string Cnpj { get; set; }
         public string NomeLoja { get; set; }
-        public string CategoriaVenda { get; set; }
         public string Subdominio { get; set; }
+        public int IdCategoriaLoja { get; set; }
     }
 }

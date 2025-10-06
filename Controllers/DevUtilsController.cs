@@ -18,19 +18,17 @@ namespace DevUtils
     [Route("[controller]")]
     public class DevUtilsController : Controller
     {
-        private VitrineDBContext _db;
-        private readonly IRepositoryBase<CategoriaProduto> _repCategoria;
+        private VitrineDBContext _context;
 
-        public DevUtilsController(VitrineDBContext db, IRepositoryBase<CategoriaProduto> repCategoria)
+        public DevUtilsController(VitrineDBContext context)
         {
-            _db = db;
-            _repCategoria = repCategoria;
+            _context = context;
         }
 
-        [HttpPost("adicionar-categorias")]
-        public void AdicionarCategoriasGenericas()
+        [HttpPost("adicionar-categorias-produto")]
+        public void AdicionarCategoriasProduto()
         {
-            if (_db.CategoriaProduto.Any())
+            if (_context.CategoriaLoja.Any())
             {
                 Console.WriteLine("A tabela tem dados existentes.");
             }
@@ -38,20 +36,79 @@ namespace DevUtils
             {
                 List<CategoriaProduto> categorias = new List<CategoriaProduto>
                 {
-                    new CategoriaProduto { Titulo = "Eletrônicos", Imagem = "eletronicos.jpg" },
-                    new CategoriaProduto { Titulo = "Roupas", Imagem = "roupas.jpg" },
-                    new CategoriaProduto { Titulo = "Alimentos", Imagem = "alimentos.jpg" },
-                    new CategoriaProduto { Titulo = "Beleza", Imagem = "beleza.jpg" },
-                    new CategoriaProduto { Titulo = "Saúde", Imagem = "saude.jpg" },
-                    new CategoriaProduto { Titulo = "Brinquedos", Imagem = "brinquedos.jpg" },
-                    new CategoriaProduto { Titulo = "Automóveis", Imagem = "automoveis.jpg" },
-                    new CategoriaProduto { Titulo = "Móveis", Imagem = "moveis.jpg" },
-                    new CategoriaProduto { Titulo = "Esportes", Imagem = "esportes.jpg" },
-                    new CategoriaProduto { Titulo = "Livros", Imagem = "livros.jpg" }
+                    new CategoriaProduto { Titulo = "Eletrônicos" },
+                    new CategoriaProduto { Titulo = "Roupas" },
+                    new CategoriaProduto { Titulo = "Alimentos" },
+                    new CategoriaProduto { Titulo = "Beleza" },
+                    new CategoriaProduto { Titulo = "Saúde" },
+                    new CategoriaProduto { Titulo = "Brinquedos" },
+                    new CategoriaProduto { Titulo = "Automóveis" },
+                    new CategoriaProduto { Titulo = "Móveis" },
+                    new CategoriaProduto { Titulo = "Esportes" },
+                    new CategoriaProduto { Titulo = "Livros" }
                 };
 
-                _db.CategoriaProduto.AddRange(categorias);
-                _db.SaveChanges();
+                _context.CategoriaProduto.AddRange(categorias);
+                _context.SaveChanges();
+            }
+        }
+
+        [HttpPost("adicionar-categorias-loja")]
+        public void AdicionarCategoriasLoja()
+        {
+            if (_context.CategoriaLoja.Any())
+            {
+                Console.WriteLine("A tabela tem dados existentes.");
+            }
+            else
+            {
+                List<CategoriaLoja> categorias = new List<CategoriaLoja>
+                {
+                    new CategoriaLoja { Titulo = "Eletrônicos" },
+                    new CategoriaLoja { Titulo = "Roupas" },
+                    new CategoriaLoja { Titulo = "Alimentos" },
+                    new CategoriaLoja { Titulo = "Beleza" },
+                    new CategoriaLoja { Titulo = "Saúde" },
+                    new CategoriaLoja { Titulo = "Brinquedos" },
+                    new CategoriaLoja { Titulo = "Automóveis" },
+                    new CategoriaLoja { Titulo = "Móveis" },
+                    new CategoriaLoja { Titulo = "Esportes" },
+                    new CategoriaLoja { Titulo = "Livros" }
+                };
+
+                var oCat = new RepositoryBase<CategoriaLoja>(_context);
+
+                oCat.IncluirListaAsync(categorias);
+            }
+        }
+
+        [HttpPost("adicionar-layout-tema")]
+        public void AdicionarLayoutTema()
+        {
+            if (_context.Layout.Any() || _context.Tema.Any())
+            {
+                Console.WriteLine("As tabelas tem dados existentes.");
+            }
+            else
+            {
+                List<Layout> layouts = new List<Layout>
+                {
+                    new Layout { Nome = "layout-1" },
+                    new Layout { Nome = "layout-2" },
+                    new Layout { Nome = "layout-3" },
+                    new Layout { Nome = "layout-4" },
+                };
+                List<Tema> temas = new List<Tema>
+                {
+                    new Tema { Nome = "tema-1" },
+                    new Tema { Nome = "tema-2" },
+                    new Tema { Nome = "tema-3" },
+                    new Tema { Nome = "tema-4" },
+                };
+
+                _context.Layout.AddRange(layouts);
+                _context.Tema.AddRange(temas);
+                _context.SaveChanges();
             }
         }
     }

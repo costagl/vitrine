@@ -2,34 +2,20 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace VitrineApi.Models;
 
 public partial class Lojista
 {
-    [Key]
-    [StringLength(11)]
-    [Unicode(false)]
     public string Cpf { get; set; }
 
-    [Required]
-    [StringLength(255)]
     public string NomeCompleto { get; set; }
 
     public DateOnly DataNascimento { get; set; }
 
-    [StringLength(20)]
-    [Unicode(false)]
-    public string Telefone { get; set; }
-
-    [Required]
-    [StringLength(255)]
-    [Unicode(false)]
     public string Email { get; set; }
 
-    [InverseProperty("CpfNavigation")]
+    public string Telefone { get; set; }
+
     public virtual ICollection<Loja> Loja { get; set; } = new List<Loja>();
 }

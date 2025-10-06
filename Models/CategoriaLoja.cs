@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace VitrineApi.Models;
 
-public partial class CategoriaProduto
+public partial class CategoriaLoja
 {
     public int Id { get; set; }
 
@@ -13,5 +13,5 @@ public partial class CategoriaProduto
 
     public byte[] Imagem { get; set; }
 
-    public virtual ICollection<Produto> Produto { get; set; } = new List<Produto>();
+    public virtual ICollection<Loja> Loja { get; set; } = new List<Loja>();
 }

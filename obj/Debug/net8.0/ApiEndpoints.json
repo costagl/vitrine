@@ -1,8 +1,40 @@
 [
   {
     "ContainingType": "DevUtils.DevUtilsController",
-    "Method": "AdicionarCategoriasGenericas",
-    "RelativePath": "DevUtils/adicionar-categorias",
+    "Method": "AdicionarCategoriasLoja",
+    "RelativePath": "DevUtils/adicionar-categorias-loja",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "DevUtils.DevUtilsController",
+    "Method": "AdicionarCategoriasProduto",
+    "RelativePath": "DevUtils/adicionar-categorias-produto",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "DevUtils.DevUtilsController",
+    "Method": "AdicionarLayoutTema",
+    "RelativePath": "DevUtils/adicionar-layout-tema",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -266,8 +298,18 @@
   },
   {
     "ContainingType": "ProdutoController",
-    "Method": "ListarCategorias",
-    "RelativePath": "produto/listar-categoria",
+    "Method": "ListarCategoriasLoja",
+    "RelativePath": "produto/listar-categoria-loja",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProdutoController",
+    "Method": "ListarCategoriasProduto",
+    "RelativePath": "produto/listar-categoria-produto",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

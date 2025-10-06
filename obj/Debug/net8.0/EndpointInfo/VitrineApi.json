@@ -259,7 +259,31 @@
         }
       }
     },
-    "/DevUtils/adicionar-categorias": {
+    "/DevUtils/adicionar-categorias-produto": {
+      "post": {
+        "tags": [
+          "DevUtils"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/DevUtils/adicionar-categorias-loja": {
+      "post": {
+        "tags": [
+          "DevUtils"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/DevUtils/adicionar-layout-tema": {
       "post": {
         "tags": [
           "DevUtils"
@@ -457,7 +481,19 @@
         }
       }
     },
-    "/produto/listar-categoria": {
+    "/produto/listar-categoria-produto": {
+      "get": {
+        "tags": [
+          "Produto"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/produto/listar-categoria-loja": {
       "get": {
         "tags": [
           "Produto"
@@ -599,11 +635,7 @@
   },
   "components": {
     "schemas": {
-      "CategoriaProduto": {
-        "required": [
-          "imagem",
-          "titulo"
-        ],
+      "CategoriaLoja": {
         "type": "object",
         "properties": {
           "id": {
@@ -611,14 +643,39 @@
             "format": "int32"
           },
           "titulo": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "imagem": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "loja": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Loja"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoriaProduto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "titulo": {
+            "type": "string",
+            "nullable": true
+          },
+          "imagem": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
           },
           "produto": {
             "type": "array",
@@ -631,10 +688,6 @@
         "additionalProperties": false
       },
       "Cliente": {
-        "required": [
-          "email",
-          "nomeCompleto"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -642,18 +695,14 @@
             "format": "int32"
           },
           "nomeCompleto": {
-            "maxLength": 200,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "email": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "telefone": {
-            "maxLength": 30,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -735,44 +784,30 @@
             "nullable": true
           },
           "logradouro": {
-            "maxLength": 200,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "numero": {
-            "maxLength": 20,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "complemento": {
-            "maxLength": 100,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "bairro": {
-            "maxLength": 100,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "cidade": {
-            "maxLength": 100,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "estado": {
-            "maxLength": 50,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "cep": {
-            "maxLength": 20,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -790,9 +825,6 @@
         "additionalProperties": false
       },
       "ItensPedido": {
-        "required": [
-          "nomeProduto"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -808,9 +840,8 @@
             "format": "int32"
           },
           "nomeProduto": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "quantidade": {
             "type": "integer",
@@ -834,9 +865,6 @@
         "additionalProperties": false
       },
       "Layout": {
-        "required": [
-          "nome"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -844,9 +872,8 @@
             "format": "int32"
           },
           "nome": {
-            "maxLength": 50,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "loja": {
             "type": "array",
@@ -882,12 +909,6 @@
         "additionalProperties": false
       },
       "Loja": {
-        "required": [
-          "categoriaLoja",
-          "cpf",
-          "nomeLoja",
-          "subdominio"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -895,41 +916,51 @@
             "format": "int32"
           },
           "nomeLoja": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
-          "categoriaLoja": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
+          "cpf": {
+            "type": "string",
+            "nullable": true
           },
-          "idTema": {
-            "type": "integer",
-            "format": "int32"
+          "cnpj": {
+            "type": "string",
+            "nullable": true
+          },
+          "subdominio": {
+            "type": "string",
+            "nullable": true
           },
           "idLayout": {
             "type": "integer",
             "format": "int32"
           },
-          "cpf": {
-            "maxLength": 11,
-            "minLength": 0,
-            "type": "string"
+          "idTema": {
+            "type": "integer",
+            "format": "int32"
           },
-          "cnpj": {
-            "maxLength": 14,
-            "minLength": 0,
+          "descricao": {
             "type": "string",
             "nullable": true
           },
-          "subdominio": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
+          "avaliacao": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "logotipo": {
+            "type": "string",
+            "nullable": true
+          },
+          "idCategoria": {
+            "type": "integer",
+            "format": "int32"
           },
           "cpfNavigation": {
             "$ref": "#/components/schemas/Lojista"
+          },
+          "idCategoriaNavigation": {
+            "$ref": "#/components/schemas/CategoriaLoja"
           },
           "idLayoutNavigation": {
             "$ref": "#/components/schemas/Layout"
@@ -948,36 +979,26 @@
         "additionalProperties": false
       },
       "Lojista": {
-        "required": [
-          "email",
-          "nomeCompleto"
-        ],
         "type": "object",
         "properties": {
           "cpf": {
-            "maxLength": 11,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "nomeCompleto": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "dataNascimento": {
             "$ref": "#/components/schemas/DateOnly"
           },
-          "telefone": {
-            "maxLength": 20,
-            "minLength": 0,
+          "email": {
             "type": "string",
             "nullable": true
           },
-          "email": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string"
+          "telefone": {
+            "type": "string",
+            "nullable": true
           },
           "loja": {
             "type": "array",
@@ -990,10 +1011,6 @@
         "additionalProperties": false
       },
       "Pedido": {
-        "required": [
-          "formaPagamento",
-          "status"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1017,9 +1034,8 @@
             "format": "date-time"
           },
           "status": {
-            "maxLength": 30,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "valorTotal": {
             "type": "number",
@@ -1030,13 +1046,10 @@
             "format": "double"
           },
           "formaPagamento": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "codigoRastreamento": {
-            "maxLength": 50,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -1049,8 +1062,6 @@
             "format": "date-time"
           },
           "observacoes": {
-            "maxLength": 500,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -1071,12 +1082,6 @@
         "additionalProperties": false
       },
       "Produto": {
-        "required": [
-          "descricao",
-          "imagem",
-          "sku",
-          "titulo"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1084,9 +1089,8 @@
             "format": "int32"
           },
           "titulo": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "idLoja": {
             "type": "integer",
@@ -1106,14 +1110,12 @@
             "format": "int32"
           },
           "sku": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "imagem": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "ativo": {
             "type": "integer",
@@ -1124,8 +1126,8 @@
             "format": "double"
           },
           "descricao": {
-            "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "altura": {
             "type": "number",
@@ -1207,21 +1209,18 @@
             "type": "string",
             "nullable": true
           },
-          "categoriaVenda": {
-            "type": "string",
-            "nullable": true
-          },
           "subdominio": {
             "type": "string",
             "nullable": true
+          },
+          "idCategoriaLoja": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
       },
       "Tema": {
-        "required": [
-          "nome"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1229,9 +1228,8 @@
             "format": "int32"
           },
           "nome": {
-            "maxLength": 50,
-            "minLength": 0,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "loja": {
             "type": "array",

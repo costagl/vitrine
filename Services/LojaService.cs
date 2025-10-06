@@ -21,7 +21,7 @@ public class LojaService : ILojaService
             {
                 Id = l.Id,
                 NomeLoja = l.NomeLoja,
-                CategoriaLoja = l.CategoriaLoja,
+                CategoriaLoja = l.IdCategoriaNavigation.Titulo,
                 IdTema = l.IdTema,
                 IdLayout = l.IdLayout,
                 Subdominio = l.Subdominio,
