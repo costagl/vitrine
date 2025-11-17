@@ -2,26 +2,40 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace VitrineApi.Models;
 
+[Index("IdPedido", Name = "IX_ItensPedido_IdPedido")]
+[Index("IdProduto", Name = "IX_ItensPedido_IdProduto")]
 public partial class ItensPedido
 {
+    [Key]
     public int Id { get; set; }
 
     public int IdPedido { get; set; }
 
     public int IdProduto { get; set; }
 
+    [Required]
+    [StringLength(100)]
     public string NomeProduto { get; set; }
 
     public int Quantidade { get; set; }
 
+    [Column(TypeName = "decimal(18, 4)")]
     public decimal PrecoUnitario { get; set; }
 
+    [Column(TypeName = "decimal(18, 4)")]
     public decimal Total { get; set; }
 
+    [ForeignKey("IdPedido")]
+    [InverseProperty("ItensPedido")]
     public virtual Pedido IdPedidoNavigation { get; set; }
 
+    [ForeignKey("IdProduto")]
+    [InverseProperty("ItensPedido")]
     public virtual Produto IdProdutoNavigation { get; set; }
 }

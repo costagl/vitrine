@@ -2,30 +2,45 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace VitrineApi.Models;
 
+[Index("IdCliente", Name = "IX_EnderecoEntrega_IdCliente")]
 public partial class EnderecoEntrega
 {
+    [Key]
     public int Id { get; set; }
 
     public int? IdCliente { get; set; }
 
+    [StringLength(200)]
     public string Logradouro { get; set; }
 
+    [StringLength(20)]
     public string Numero { get; set; }
 
+    [StringLength(100)]
     public string Complemento { get; set; }
 
+    [StringLength(100)]
     public string Bairro { get; set; }
 
+    [StringLength(100)]
     public string Cidade { get; set; }
 
+    [StringLength(50)]
     public string Estado { get; set; }
 
+    [StringLength(20)]
     public string Cep { get; set; }
 
+    [ForeignKey("IdCliente")]
+    [InverseProperty("EnderecoEntrega")]
     public virtual Cliente IdClienteNavigation { get; set; }
 
+    [InverseProperty("IdEnderecoEntregaNavigation")]
     public virtual ICollection<Pedido> Pedido { get; set; } = new List<Pedido>();
 }

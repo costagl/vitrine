@@ -38,8 +38,7 @@ namespace VitrineApi.Controllers
                 NomeLoja = loja.NomeLoja,
                 IdTema = loja.IdTema,
                 IdLayout = loja.IdLayout,
-                Cpf = loja.Cpf,
-                Cnpj = loja.Cnpj,
+                Cpf_Cnpj = loja.Cpf_Cnpj,
                 Avaliacao = loja.Avaliacao ?? 0,
                 Descricao = loja.Descricao,
                 Logotipo = loja.Logotipo,
@@ -67,8 +66,7 @@ namespace VitrineApi.Controllers
                 CategoriaLoja = loja.IdCategoriaNavigation.Titulo,
                 IdTema = loja.IdTema,
                 IdLayout = loja.IdLayout,
-                Cpf = loja.Cpf,
-                Cnpj = loja.Cnpj
+                Cpf_Cnpj = loja.Cpf_Cnpj,
             }).ToList();
 
             return Ok(new { lojaSelecionada });

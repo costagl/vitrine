@@ -2,44 +2,71 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace VitrineApi.Models;
 
+[Index("IdCategoriaProduto", Name = "IX_Produto_IdCategoriaProduto")]
+[Index("IdLoja", Name = "IX_Produto_IdLoja")]
 public partial class Produto
 {
+    [Key]
     public int Id { get; set; }
 
+    [Required]
+    [StringLength(255)]
+    [Unicode(false)]
     public string Titulo { get; set; }
 
     public int IdLoja { get; set; }
 
+    [Column(TypeName = "decimal(10, 4)")]
     public decimal ValorUnitario { get; set; }
 
+    [Column(TypeName = "decimal(10, 4)")]
     public decimal? ValorPromocional { get; set; }
 
     public int Estoque { get; set; }
 
+    [Required]
+    [StringLength(100)]
+    [Unicode(false)]
     public string Sku { get; set; }
 
+    [StringLength(255)]
+    [Unicode(false)]
     public string Imagem { get; set; }
 
     public byte Ativo { get; set; }
 
+    [Column(TypeName = "decimal(10, 2)")]
     public decimal Peso { get; set; }
 
+    [Required]
+    [Column(TypeName = "text")]
     public string Descricao { get; set; }
 
+    [Column(TypeName = "decimal(10, 2)")]
     public decimal Altura { get; set; }
 
+    [Column(TypeName = "decimal(10, 2)")]
     public decimal Largura { get; set; }
 
+    [Column(TypeName = "decimal(10, 2)")]
     public decimal Profundidade { get; set; }
 
     public int IdCategoriaProduto { get; set; }
 
+    [ForeignKey("IdCategoriaProduto")]
+    [InverseProperty("Produto")]
     public virtual CategoriaProduto IdCategoriaProdutoNavigation { get; set; }
 
+    [ForeignKey("IdLoja")]
+    [InverseProperty("Produto")]
     public virtual Loja IdLojaNavigation { get; set; }
 
+    [InverseProperty("IdProdutoNavigation")]
     public virtual ICollection<ItensPedido> ItensPedido { get; set; } = new List<ItensPedido>();
 }

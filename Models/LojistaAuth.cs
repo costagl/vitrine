@@ -2,5 +2,5 @@
 
 public class LojistaAuth : IdentityUser
 {
-    public string Cpf { get; set; }
+    public string Cpf_Cnpj { get; set; }
 }

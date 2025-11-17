@@ -26,39 +26,82 @@ namespace DevUtils
         }
 
         [HttpPost("adicionar-categorias-produto")]
-        public void AdicionarCategoriasProduto()
+        public async Task<IActionResult> AdicionarCategoriasProduto()
         {
-            if (_context.CategoriaLoja.Any())
+            if (_context.CategoriaProduto.Any())
             {
-                Console.WriteLine("A tabela tem dados existentes.");
+                return Conflict(new { message = "A tabela já contém dados." });
             }
             else
             {
-                List<CategoriaProduto> categorias = new List<CategoriaProduto>
-                {
-                    new CategoriaProduto { Titulo = "Eletrônicos" },
-                    new CategoriaProduto { Titulo = "Roupas" },
-                    new CategoriaProduto { Titulo = "Alimentos" },
-                    new CategoriaProduto { Titulo = "Beleza" },
-                    new CategoriaProduto { Titulo = "Saúde" },
-                    new CategoriaProduto { Titulo = "Brinquedos" },
-                    new CategoriaProduto { Titulo = "Automóveis" },
-                    new CategoriaProduto { Titulo = "Móveis" },
-                    new CategoriaProduto { Titulo = "Esportes" },
-                    new CategoriaProduto { Titulo = "Livros" }
-                };
+                var categorias = new List<List<string>>
+        {
+            // Eletrônicos
+            new List<string> { "Celulares", "Notebooks", "Televisores", "Fones de Ouvido", "Câmeras Digitais",
+                               "Tablets", "Smartwatches", "Consoles de Videogame", "Drones", "Acessórios Eletrônicos" },
+            
+            // Roupas
+            new List<string> { "Camisetas", "Calças", "Vestidos", "Blusas", "Shorts", "Jaquetas", "Moda Íntima",
+                               "Roupas Esportivas", "Moda Praia", "Acessórios de Moda" },
 
-                _context.CategoriaProduto.AddRange(categorias);
+            // Alimentos
+            new List<string> { "Grãos e Cereais", "Laticínios", "Carnes", "Frutas e Verduras", "Bebidas",
+                               "Doces e Sobremesas", "Produtos Orgânicos", "Congelados", "Massas e Molhos", "Temperos e Especiarias" },
+
+            // Beleza
+            new List<string> { "Maquiagem", "Perfumes", "Cuidados com a Pele", "Cuidados com o Cabelo", "Esmaltes",
+                               "Hidratantes", "Protetores Solares", "Kits de Beleza", "Produtos Naturais", "Acessórios de Beleza" },
+
+            // Saúde
+            new List<string> { "Suplementos", "Vitaminas", "Medicamentos", "Produtos Naturais", "Equipamentos Médicos",
+                               "Primeiros Socorros", "Cuidados Pessoais", "Higiene Bucal", "Saúde Feminina", "Bem-Estar" },
+
+            // Brinquedos
+            new List<string> { "Bonecos e Bonecas", "Jogos de Tabuleiro", "Brinquedos Educativos", "Carrinhos", "Lego e Blocos de Montar",
+                               "Pelúcias", "Instrumentos Musicais Infantis", "Brinquedos de Exterior", "Brinquedos Eletrônicos", "Fantasias" },
+
+            // Automóveis
+            new List<string> { "Peças Automotivas", "Acessórios Internos", "Acessórios Externos", "Som Automotivo", "Lubrificantes",
+                               "Pneus e Rodas", "Equipamentos de Segurança", "Limpeza Automotiva", "Ferramentas", "Motocicletas e Acessórios" },
+
+            // Móveis
+            new List<string> { "Sofás", "Camas", "Mesas", "Cadeiras", "Armários", "Racks e Painéis", "Escrivaninhas", "Poltronas",
+                               "Móveis de Cozinha", "Móveis para Escritório" },
+
+            // Esportes
+            new List<string> { "Roupas Esportivas", "Calçados Esportivos", "Equipamentos de Academia", "Bolas", "Acessórios Fitness",
+                               "Esportes ao Ar Livre", "Ciclismo", "Natação", "Artes Marciais", "Suplementos Esportivos" },
+
+            // Livros
+            new List<string> { "Romance", "Ficção Científica", "Biografias", "Autoajuda", "Didáticos", "Negócios e Economia",
+                               "Religião e Espiritualidade", "Infantis", "HQs e Mangás", "Literatura Brasileira" }
+        };
+                var categoriasProduto = new List<CategoriaProduto>();
+                int idCatLoja = 1;
+                int idCatProd = 1;
+
+                foreach (var categoria in categorias)
+                {
+                    foreach (var subcategoria in categoria)
+                    {
+                        categoriasProduto.Add(new CategoriaProduto { Id = idCatProd, Titulo = subcategoria, IdCategoriaLoja = idCatLoja });
+                        idCatProd++;
+                    }
+                    idCatLoja++;
+                }
+
+                _context.CategoriaProduto.AddRange(categoriasProduto);
                 _context.SaveChanges();
+                return Ok(new { message = "Dados adicionados." });
             }
         }
 
         [HttpPost("adicionar-categorias-loja")]
-        public void AdicionarCategoriasLoja()
+        public async Task<IActionResult> AdicionarCategoriasLoja()
         {
             if (_context.CategoriaLoja.Any())
             {
-                Console.WriteLine("A tabela tem dados existentes.");
+                return Conflict(new { message = "A tabela já contém dados." });
             }
             else
             {
@@ -79,15 +122,16 @@ namespace DevUtils
                 var oCat = new RepositoryBase<CategoriaLoja>(_context);
 
                 oCat.IncluirListaAsync(categorias);
+                return Ok(new { message = "Dados adicionados." });
             }
         }
 
         [HttpPost("adicionar-layout-tema")]
-        public void AdicionarLayoutTema()
+        public async Task<IActionResult> AdicionarLayoutTema()
         {
             if (_context.Layout.Any() || _context.Tema.Any())
             {
-                Console.WriteLine("As tabelas tem dados existentes.");
+                return Conflict(new { message = "A tabela já contém dados." });
             }
             else
             {
@@ -109,6 +153,7 @@ namespace DevUtils
                 _context.Layout.AddRange(layouts);
                 _context.Tema.AddRange(temas);
                 _context.SaveChanges();
+                return Ok(new { message = "Dados adicionados." });
             }
         }
     }

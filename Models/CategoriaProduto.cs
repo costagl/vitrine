@@ -2,16 +2,30 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace VitrineApi.Models;
 
 public partial class CategoriaProduto
 {
+    [Key]
     public int Id { get; set; }
 
+    [Required]
+    [StringLength(50)]
+    [Unicode(false)]
     public string Titulo { get; set; }
 
     public byte[] Imagem { get; set; }
 
+    public int IdCategoriaLoja { get; set; }
+
+    [ForeignKey("IdCategoriaLoja")]
+    [InverseProperty("CategoriaProduto")]
+    public virtual CategoriaLoja IdCategoriaLojaNavigation { get; set; }
+
+    [InverseProperty("IdCategoriaProdutoNavigation")]
     public virtual ICollection<Produto> Produto { get; set; } = new List<Produto>();
 }

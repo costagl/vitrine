@@ -19,10 +19,9 @@ namespace VitrineApi.ViewModels
         [Required(ErrorMessage = "Confirmação de Senha é necessário.")]
         [DataType(DataType.Password)]
         public string ConfirmarSenha { get; set; }
-        public string Cpf { get; set; }
+        public string Cpf_Cnpj { get; set; }
         public string DataNascimento { get; set; }
         public string Telefone { get; set; }
-        public string Cnpj { get; set; }
         public string NomeLoja { get; set; }
         public string Subdominio { get; set; }
         public int IdCategoriaLoja { get; set; }

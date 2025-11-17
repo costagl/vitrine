@@ -42,7 +42,7 @@ public class ProdutoController : ControllerBase
         if (user == null)
             return Unauthorized("Usuário não autenticado");
 
-        var loja = _context.Loja.FirstOrDefault(c => c.Cpf == user.Cpf);
+        var loja = _context.Loja.FirstOrDefault(c => c.Cpf_Cnpj == user.Cpf_Cnpj);
 
         if (loja == null)
             return BadRequest("Loja não encontrada para o usuário.");
@@ -93,7 +93,7 @@ public class ProdutoController : ControllerBase
         if (user == null)
             return NotFound(new { message = "Usuário não encontrado." });
 
-        var loja = _context.Loja.FirstOrDefault(c => c.Cpf == user.Cpf);
+        var loja = _context.Loja.FirstOrDefault(c => c.Cpf_Cnpj == user.Cpf_Cnpj);
 
         if (loja == null)
             return NotFound(new { message = "Loja não encontrada." });
@@ -106,7 +106,7 @@ public class ProdutoController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet("listar-categoria-produto")]
+    [HttpGet("categoria-produto")]
     public async Task<IActionResult> ListarCategoriasProduto()
     {
         var categoriaProduto = await _CatProdRep.ListarAsync();
@@ -114,7 +114,7 @@ public class ProdutoController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet("listar-categoria-loja")]
+    [HttpGet("categoria-loja")]
     public async Task<IActionResult> ListarCategoriasLoja()
     {
         var categoriaLoja = await _CatLojaRep.ListarAsync();

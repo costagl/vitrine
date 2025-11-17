@@ -25,8 +25,7 @@ public class LojaService : ILojaService
                 IdTema = l.IdTema,
                 IdLayout = l.IdLayout,
                 Subdominio = l.Subdominio,
-                Cpf = l.Cpf,
-                Cnpj = l.Cnpj
+                Cpf_Cnpj = l.Cpf_Cnpj,
             })
             .FirstOrDefaultAsync();
 

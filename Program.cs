@@ -9,7 +9,7 @@ using VitrineApi.Data;
 using VitrineApi.Interfaces;
 using VitrineApi.Mappings;
 using VitrineApi.Models;
-
+using VitrineApi.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -128,7 +128,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ILojaService, LojaService>();
+builder.Services.AddScoped<Cpf_CnpjValidator>();
 builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+builder.Services.AddScoped<RepositoryBase<Lojista>>();
 builder.Services.AddScoped<RepositoryBase<Loja>>();
 
 builder.Services.AddAutoMapper(cfg => {

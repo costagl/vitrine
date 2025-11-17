@@ -40,235 +40,78 @@ public partial class VitrineDBContext : IdentityDbContext<LojistaAuth>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<CategoriaLoja>(entity =>
-        {
-            entity.Property(e => e.Titulo)
-                .IsRequired()
-                .HasMaxLength(50)
-                .IsUnicode(false);
-        });
-
         modelBuilder.Entity<CategoriaProduto>(entity =>
         {
-            entity.Property(e => e.Titulo)
-                .IsRequired()
-                .HasMaxLength(50)
-                .IsUnicode(false);
-        });
+            entity.Property(e => e.Id).ValueGeneratedNever();
 
-        modelBuilder.Entity<Cliente>(entity =>
-        {
-            entity.Property(e => e.CriadoEm).HasColumnType("datetime");
-            entity.Property(e => e.Email)
-                .IsRequired()
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.NomeCompleto)
-                .IsRequired()
-                .HasMaxLength(200);
-            entity.Property(e => e.Telefone)
-                .HasMaxLength(30)
-                .IsUnicode(false);
+            entity.HasOne(d => d.IdCategoriaLojaNavigation).WithMany(p => p.CategoriaProduto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CategoriaProduto_CategoriaLoja");
         });
 
         modelBuilder.Entity<EnderecoEntrega>(entity =>
         {
-            entity.HasIndex(e => e.IdCliente, "IX_EnderecoEntrega_IdCliente");
-
             entity.Property(e => e.Id).ValueGeneratedNever();
-            entity.Property(e => e.Bairro).HasMaxLength(100);
-            entity.Property(e => e.Cep).HasMaxLength(20);
-            entity.Property(e => e.Cidade).HasMaxLength(100);
-            entity.Property(e => e.Complemento).HasMaxLength(100);
-            entity.Property(e => e.Estado).HasMaxLength(50);
-            entity.Property(e => e.Logradouro).HasMaxLength(200);
-            entity.Property(e => e.Numero).HasMaxLength(20);
 
-            entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.EnderecoEntrega)
-                .HasForeignKey(d => d.IdCliente)
-                .HasConstraintName("FK_EnderecoEntrega_Cliente");
+            entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.EnderecoEntrega).HasConstraintName("FK_EnderecoEntrega_Cliente");
         });
 
         modelBuilder.Entity<ItensPedido>(entity =>
         {
-            entity.HasIndex(e => e.IdPedido, "IX_ItensPedido_IdPedido");
-
-            entity.HasIndex(e => e.IdProduto, "IX_ItensPedido_IdProduto");
-
-            entity.Property(e => e.NomeProduto)
-                .IsRequired()
-                .HasMaxLength(100);
-            entity.Property(e => e.PrecoUnitario).HasColumnType("decimal(18, 4)");
-            entity.Property(e => e.Total).HasColumnType("decimal(18, 4)");
-
             entity.HasOne(d => d.IdPedidoNavigation).WithMany(p => p.ItensPedido)
-                .HasForeignKey(d => d.IdPedido)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ItensPedido_Pedido");
 
             entity.HasOne(d => d.IdProdutoNavigation).WithMany(p => p.ItensPedido)
-                .HasForeignKey(d => d.IdProduto)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ItensPedido_Produto");
         });
 
-        modelBuilder.Entity<Layout>(entity =>
-        {
-            entity.Property(e => e.Nome)
-                .IsRequired()
-                .HasMaxLength(50);
-        });
-
         modelBuilder.Entity<Loja>(entity =>
         {
-            entity.HasIndex(e => e.Cpf, "IX_Loja_Cpf");
-
-            entity.HasIndex(e => e.IdLayout, "IX_Loja_IdLayout");
-
-            entity.HasIndex(e => e.IdTema, "IX_Loja_IdTema");
-
-            entity.Property(e => e.Avaliacao).HasColumnType("decimal(3, 1)");
-            entity.Property(e => e.Cnpj)
-                .HasMaxLength(14)
-                .IsUnicode(false);
-            entity.Property(e => e.Cpf)
-                .IsRequired()
-                .HasMaxLength(11)
-                .IsUnicode(false);
-            entity.Property(e => e.Descricao)
-                .HasMaxLength(100)
-                .IsUnicode(false);
             entity.Property(e => e.IdLayout).HasAnnotation("Relational:DefaultConstraintName", "DF__Loja__IdLayout__693CA210");
             entity.Property(e => e.IdTema).HasAnnotation("Relational:DefaultConstraintName", "DF__Loja__IdTema__6A30C649");
-            entity.Property(e => e.Logotipo)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.NomeLoja)
-                .IsRequired()
-                .HasMaxLength(255);
             entity.Property(e => e.Subdominio)
-                .IsRequired()
-                .HasMaxLength(100)
                 .HasDefaultValue("")
                 .HasAnnotation("Relational:DefaultConstraintName", "DF__Loja__Subdominio__68487DD7");
 
-            entity.HasOne(d => d.CpfNavigation).WithMany(p => p.Loja)
-                .HasForeignKey(d => d.Cpf)
+            entity.HasOne(d => d.Cpf_CnpjNavigation).WithMany(p => p.Loja)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Loja_Lojista");
 
             entity.HasOne(d => d.IdCategoriaNavigation).WithMany(p => p.Loja)
-                .HasForeignKey(d => d.IdCategoria)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Loja_CategoriaLoja");
 
             entity.HasOne(d => d.IdLayoutNavigation).WithMany(p => p.Loja)
-                .HasForeignKey(d => d.IdLayout)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Loja_Layout");
 
             entity.HasOne(d => d.IdTemaNavigation).WithMany(p => p.Loja)
-                .HasForeignKey(d => d.IdTema)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Loja_Tema");
         });
 
-        modelBuilder.Entity<Lojista>(entity =>
-        {
-            entity.HasKey(e => e.Cpf);
-
-            entity.Property(e => e.Cpf)
-                .HasMaxLength(11)
-                .IsUnicode(false);
-            entity.Property(e => e.Email)
-                .IsRequired()
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.NomeCompleto)
-                .IsRequired()
-                .HasMaxLength(255);
-            entity.Property(e => e.Telefone)
-                .HasMaxLength(20)
-                .IsUnicode(false);
-        });
-
         modelBuilder.Entity<Pedido>(entity =>
         {
-            entity.HasIndex(e => e.IdCliente, "IX_Pedido_IdCliente");
-
-            entity.HasIndex(e => e.IdEnderecoEntrega, "IX_Pedido_IdEnderecoEntrega");
-
-            entity.Property(e => e.CodigoRastreamento).HasMaxLength(50);
-            entity.Property(e => e.DataCriacao).HasColumnType("datetime");
-            entity.Property(e => e.DataEnvio).HasColumnType("datetime");
-            entity.Property(e => e.DataPagamento).HasColumnType("datetime");
-            entity.Property(e => e.FormaPagamento)
-                .IsRequired()
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.FreteValor).HasColumnType("decimal(18, 4)");
-            entity.Property(e => e.Observacoes).HasMaxLength(500);
-            entity.Property(e => e.Status)
-                .IsRequired()
-                .HasMaxLength(30)
-                .IsUnicode(false);
-            entity.Property(e => e.ValorTotal).HasColumnType("decimal(18, 4)");
-
             entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Pedido)
-                .HasForeignKey(d => d.IdCliente)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Pedido_Cliente");
 
             entity.HasOne(d => d.IdEnderecoEntregaNavigation).WithMany(p => p.Pedido)
-                .HasForeignKey(d => d.IdEnderecoEntrega)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Pedido_EnderecoEntrega");
         });
 
         modelBuilder.Entity<Produto>(entity =>
         {
-            entity.HasIndex(e => e.IdCategoriaProduto, "IX_Produto_IdCategoriaProduto");
-
-            entity.HasIndex(e => e.IdLoja, "IX_Produto_IdLoja");
-
-            entity.Property(e => e.Altura).HasColumnType("decimal(10, 2)");
-            entity.Property(e => e.Descricao)
-                .IsRequired()
-                .HasColumnType("text");
-            entity.Property(e => e.Imagem)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.Largura).HasColumnType("decimal(10, 2)");
-            entity.Property(e => e.Peso).HasColumnType("decimal(10, 2)");
-            entity.Property(e => e.Profundidade).HasColumnType("decimal(10, 2)");
-            entity.Property(e => e.Sku)
-                .IsRequired()
-                .HasMaxLength(100)
-                .IsUnicode(false);
-            entity.Property(e => e.Titulo)
-                .IsRequired()
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.ValorPromocional).HasColumnType("decimal(10, 4)");
-            entity.Property(e => e.ValorUnitario).HasColumnType("decimal(10, 4)");
-
             entity.HasOne(d => d.IdCategoriaProdutoNavigation).WithMany(p => p.Produto)
-                .HasForeignKey(d => d.IdCategoriaProduto)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Produto_CategoriaProduto");
 
             entity.HasOne(d => d.IdLojaNavigation).WithMany(p => p.Produto)
-                .HasForeignKey(d => d.IdLoja)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Produto_Loja");
-        });
-
-        modelBuilder.Entity<Tema>(entity =>
-        {
-            entity.Property(e => e.Nome)
-                .IsRequired()
-                .HasMaxLength(50);
         });
 
         OnModelCreatingPartial(modelBuilder);

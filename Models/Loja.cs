@@ -2,40 +2,66 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace VitrineApi.Models;
 
+[Index("Cpf_Cnpj", Name = "IX_Loja_Cpf")]
+[Index("IdLayout", Name = "IX_Loja_IdLayout")]
+[Index("IdTema", Name = "IX_Loja_IdTema")]
 public partial class Loja
 {
+    [Key]
     public int Id { get; set; }
 
+    [Required]
+    [StringLength(255)]
     public string NomeLoja { get; set; }
 
-    public string Cpf { get; set; }
+    [Required]
+    [StringLength(14)]
+    [Unicode(false)]
+    public string Cpf_Cnpj { get; set; }
 
-    public string Cnpj { get; set; }
-
+    [Required]
+    [StringLength(100)]
     public string Subdominio { get; set; }
 
     public int IdLayout { get; set; }
 
     public int IdTema { get; set; }
 
+    [StringLength(100)]
+    [Unicode(false)]
     public string Descricao { get; set; }
 
+    [Column(TypeName = "decimal(3, 1)")]
     public decimal? Avaliacao { get; set; }
 
+    [StringLength(255)]
+    [Unicode(false)]
     public string Logotipo { get; set; }
 
     public int IdCategoria { get; set; }
 
-    public virtual Lojista CpfNavigation { get; set; }
+    [ForeignKey("Cpf_Cnpj")]
+    [InverseProperty("Loja")]
+    public virtual Lojista Cpf_CnpjNavigation { get; set; }
 
+    [ForeignKey("IdCategoria")]
+    [InverseProperty("Loja")]
     public virtual CategoriaLoja IdCategoriaNavigation { get; set; }
 
+    [ForeignKey("IdLayout")]
+    [InverseProperty("Loja")]
     public virtual Layout IdLayoutNavigation { get; set; }
 
+    [ForeignKey("IdTema")]
+    [InverseProperty("Loja")]
     public virtual Tema IdTemaNavigation { get; set; }
 
+    [InverseProperty("IdLojaNavigation")]
     public virtual ICollection<Produto> Produto { get; set; } = new List<Produto>();
 }

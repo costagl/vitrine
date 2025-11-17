@@ -130,10 +130,10 @@
         }
       }
     },
-    "/usuario/health": {
+    "/categoria/produto": {
       "get": {
         "tags": [
-          "Conta"
+          "Categoria"
         ],
         "responses": {
           "200": {
@@ -142,115 +142,10 @@
         }
       }
     },
-    "/usuario/login": {
-      "post": {
-        "tags": [
-          "Conta"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginVM"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginVM"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginVM"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/usuario/cadastrar": {
-      "post": {
-        "tags": [
-          "Conta"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterVM"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterVM"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterVM"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/usuario/logout": {
-      "post": {
-        "tags": [
-          "Conta"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/usuario/verificar-subdominio": {
-      "post": {
-        "tags": [
-          "Conta"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerificarSubdominioVM"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerificarSubdominioVM"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerificarSubdominioVM"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/usuario/verificar-layout-tema": {
+    "/categoria/loja": {
       "get": {
         "tags": [
-          "Conta"
+          "Categoria"
         ],
         "responses": {
           "200": {
@@ -481,7 +376,7 @@
         }
       }
     },
-    "/produto/listar-categoria-produto": {
+    "/produto/categoria-produto": {
       "get": {
         "tags": [
           "Produto"
@@ -493,7 +388,7 @@
         }
       }
     },
-    "/produto/listar-categoria-loja": {
+    "/produto/categoria-loja": {
       "get": {
         "tags": [
           "Produto"
@@ -593,41 +488,162 @@
         }
       }
     },
-    "/WeatherForecast": {
+    "/usuario/health": {
       "get": {
         "tags": [
-          "WeatherForecast"
+          "Usuario"
         ],
-        "operationId": "GetWeatherForecast",
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/usuario/login": {
+      "post": {
+        "tags": [
+          "Usuario"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginVM"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginVM"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginVM"
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/usuario/cadastrar": {
+      "post": {
+        "tags": [
+          "Usuario"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterVM"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterVM"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterVM"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/usuario/logout": {
+      "post": {
+        "tags": [
+          "Usuario"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/usuario/verificar-subdominio": {
+      "post": {
+        "tags": [
+          "Usuario"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificarSubdominioVM"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificarSubdominioVM"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificarSubdominioVM"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/usuario/verificar-layout-tema": {
+      "get": {
+        "tags": [
+          "Usuario"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/usuario/validar-cpf-cnpj": {
+      "post": {
+        "tags": [
+          "Usuario"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateCpfCnpjVM"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateCpfCnpjVM"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateCpfCnpjVM"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
           }
         }
       }
@@ -636,6 +652,9 @@
   "components": {
     "schemas": {
       "CategoriaLoja": {
+        "required": [
+          "titulo"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -643,12 +662,20 @@
             "format": "int32"
           },
           "titulo": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
           },
           "imagem": {
             "type": "string",
             "format": "byte",
+            "nullable": true
+          },
+          "categoriaProduto": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoriaProduto"
+            },
             "nullable": true
           },
           "loja": {
@@ -662,6 +689,9 @@
         "additionalProperties": false
       },
       "CategoriaProduto": {
+        "required": [
+          "titulo"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -669,13 +699,21 @@
             "format": "int32"
           },
           "titulo": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
           },
           "imagem": {
             "type": "string",
             "format": "byte",
             "nullable": true
+          },
+          "idCategoriaLoja": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idCategoriaLojaNavigation": {
+            "$ref": "#/components/schemas/CategoriaLoja"
           },
           "produto": {
             "type": "array",
@@ -688,6 +726,10 @@
         "additionalProperties": false
       },
       "Cliente": {
+        "required": [
+          "email",
+          "nomeCompleto"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -695,14 +737,18 @@
             "format": "int32"
           },
           "nomeCompleto": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
           },
           "email": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
           },
           "telefone": {
+            "maxLength": 30,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -784,30 +830,44 @@
             "nullable": true
           },
           "logradouro": {
+            "maxLength": 200,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "numero": {
+            "maxLength": 20,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "complemento": {
+            "maxLength": 100,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "bairro": {
+            "maxLength": 100,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "cidade": {
+            "maxLength": 100,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "estado": {
+            "maxLength": 50,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "cep": {
+            "maxLength": 20,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -825,6 +885,9 @@
         "additionalProperties": false
       },
       "ItensPedido": {
+        "required": [
+          "nomeProduto"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -840,8 +903,9 @@
             "format": "int32"
           },
           "nomeProduto": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
           },
           "quantidade": {
             "type": "integer",
@@ -865,6 +929,9 @@
         "additionalProperties": false
       },
       "Layout": {
+        "required": [
+          "nome"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -872,8 +939,9 @@
             "format": "int32"
           },
           "nome": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
           },
           "loja": {
             "type": "array",
@@ -909,6 +977,11 @@
         "additionalProperties": false
       },
       "Loja": {
+        "required": [
+          "cpf_Cnpj",
+          "nomeLoja",
+          "subdominio"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -916,20 +989,19 @@
             "format": "int32"
           },
           "nomeLoja": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
           },
-          "cpf": {
-            "type": "string",
-            "nullable": true
-          },
-          "cnpj": {
-            "type": "string",
-            "nullable": true
+          "cpf_Cnpj": {
+            "maxLength": 14,
+            "minLength": 0,
+            "type": "string"
           },
           "subdominio": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
           },
           "idLayout": {
             "type": "integer",
@@ -940,6 +1012,8 @@
             "format": "int32"
           },
           "descricao": {
+            "maxLength": 100,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -949,6 +1023,8 @@
             "nullable": true
           },
           "logotipo": {
+            "maxLength": 255,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -956,7 +1032,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "cpfNavigation": {
+          "cpf_CnpjNavigation": {
             "$ref": "#/components/schemas/Lojista"
           },
           "idCategoriaNavigation": {
@@ -979,24 +1055,34 @@
         "additionalProperties": false
       },
       "Lojista": {
+        "required": [
+          "email",
+          "nomeCompleto"
+        ],
         "type": "object",
         "properties": {
-          "cpf": {
+          "cpf_Cnpj": {
+            "maxLength": 14,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "nomeCompleto": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
           },
           "dataNascimento": {
             "$ref": "#/components/schemas/DateOnly"
           },
           "email": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
           },
           "telefone": {
+            "maxLength": 20,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -1011,6 +1097,10 @@
         "additionalProperties": false
       },
       "Pedido": {
+        "required": [
+          "formaPagamento",
+          "status"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1034,8 +1124,9 @@
             "format": "date-time"
           },
           "status": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string"
           },
           "valorTotal": {
             "type": "number",
@@ -1046,10 +1137,13 @@
             "format": "double"
           },
           "formaPagamento": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
           },
           "codigoRastreamento": {
+            "maxLength": 50,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -1062,6 +1156,8 @@
             "format": "date-time"
           },
           "observacoes": {
+            "maxLength": 500,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -1082,6 +1178,11 @@
         "additionalProperties": false
       },
       "Produto": {
+        "required": [
+          "descricao",
+          "sku",
+          "titulo"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1089,8 +1190,9 @@
             "format": "int32"
           },
           "titulo": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
           },
           "idLoja": {
             "type": "integer",
@@ -1110,10 +1212,13 @@
             "format": "int32"
           },
           "sku": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
           },
           "imagem": {
+            "maxLength": 255,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -1126,8 +1231,8 @@
             "format": "double"
           },
           "descricao": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "altura": {
             "type": "number",
@@ -1189,7 +1294,7 @@
             "type": "string",
             "format": "password"
           },
-          "cpf": {
+          "cpf_Cnpj": {
             "type": "string",
             "nullable": true
           },
@@ -1198,10 +1303,6 @@
             "nullable": true
           },
           "telefone": {
-            "type": "string",
-            "nullable": true
-          },
-          "cnpj": {
             "type": "string",
             "nullable": true
           },
@@ -1221,6 +1322,9 @@
         "additionalProperties": false
       },
       "Tema": {
+        "required": [
+          "nome"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1228,8 +1332,9 @@
             "format": "int32"
           },
           "nome": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
           },
           "loja": {
             "type": "array",
@@ -1241,32 +1346,20 @@
         },
         "additionalProperties": false
       },
-      "VerificarSubdominioVM": {
+      "ValidateCpfCnpjVM": {
         "type": "object",
         "properties": {
-          "subdominio": {
+          "cpf_Cnpj": {
             "type": "string",
             "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "WeatherForecast": {
+      "VerificarSubdominioVM": {
         "type": "object",
         "properties": {
-          "date": {
-            "$ref": "#/components/schemas/DateOnly"
-          },
-          "temperatureC": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "temperatureF": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "summary": {
+          "subdominio": {
             "type": "string",
             "nullable": true
           }

@@ -2,22 +2,36 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace VitrineApi.Models;
 
 public partial class Cliente
 {
+    [Key]
     public int Id { get; set; }
 
+    [Required]
+    [StringLength(200)]
     public string NomeCompleto { get; set; }
 
+    [Required]
+    [StringLength(100)]
+    [Unicode(false)]
     public string Email { get; set; }
 
+    [StringLength(30)]
+    [Unicode(false)]
     public string Telefone { get; set; }
 
+    [Column(TypeName = "datetime")]
     public DateTime CriadoEm { get; set; }
 
+    [InverseProperty("IdClienteNavigation")]
     public virtual ICollection<EnderecoEntrega> EnderecoEntrega { get; set; } = new List<EnderecoEntrega>();
 
+    [InverseProperty("IdClienteNavigation")]
     public virtual ICollection<Pedido> Pedido { get; set; } = new List<Pedido>();
 }

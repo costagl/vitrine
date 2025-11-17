@@ -1,5 +1,25 @@
 [
   {
+    "ContainingType": "CategoriaController",
+    "Method": "ListarCategoriasLoja",
+    "RelativePath": "categoria/loja",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CategoriaController",
+    "Method": "ListarCategoriasProduto",
+    "RelativePath": "categoria/produto",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "DevUtils.DevUtilsController",
     "Method": "AdicionarCategoriasLoja",
     "RelativePath": "DevUtils/adicionar-categorias-loja",
@@ -7,13 +27,7 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "DevUtils.DevUtilsController",
@@ -23,13 +37,7 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "DevUtils.DevUtilsController",
@@ -39,13 +47,7 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "VitrineApi.Controllers.CatalogoController",
@@ -262,6 +264,26 @@
   },
   {
     "ContainingType": "ProdutoController",
+    "Method": "ListarCategoriasLoja",
+    "RelativePath": "produto/categoria-loja",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProdutoController",
+    "Method": "ListarCategoriasProduto",
+    "RelativePath": "produto/categoria-produto",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProdutoController",
     "Method": "DebugToken",
     "RelativePath": "produto/debug-token",
     "HttpMethod": "GET",
@@ -298,26 +320,6 @@
   },
   {
     "ContainingType": "ProdutoController",
-    "Method": "ListarCategoriasLoja",
-    "RelativePath": "produto/listar-categoria-loja",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ProdutoController",
-    "Method": "ListarCategoriasProduto",
-    "RelativePath": "produto/listar-categoria-produto",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ProdutoController",
     "Method": "Buscar",
     "RelativePath": "produto/listar/{id}",
     "HttpMethod": "GET",
@@ -333,7 +335,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.ContaController",
+    "ContainingType": "VitrineApi.Controllers.UsuarioController",
     "Method": "Register",
     "RelativePath": "usuario/cadastrar",
     "HttpMethod": "POST",
@@ -349,7 +351,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.ContaController",
+    "ContainingType": "VitrineApi.Controllers.UsuarioController",
     "Method": "ApiHealth",
     "RelativePath": "usuario/health",
     "HttpMethod": "GET",
@@ -359,7 +361,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.ContaController",
+    "ContainingType": "VitrineApi.Controllers.UsuarioController",
     "Method": "Login",
     "RelativePath": "usuario/login",
     "HttpMethod": "POST",
@@ -375,7 +377,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.ContaController",
+    "ContainingType": "VitrineApi.Controllers.UsuarioController",
     "Method": "Logout",
     "RelativePath": "usuario/logout",
     "HttpMethod": "POST",
@@ -385,7 +387,23 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.ContaController",
+    "ContainingType": "VitrineApi.Controllers.UsuarioController",
+    "Method": "ValidarCpfOuCnpj",
+    "RelativePath": "usuario/validar-cpf-cnpj",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "VitrineApi.ViewModels.ValidateCpfCnpjVM",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VitrineApi.Controllers.UsuarioController",
     "Method": "VerificarLayoutTema",
     "RelativePath": "usuario/verificar-layout-tema",
     "HttpMethod": "GET",
@@ -395,7 +413,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.ContaController",
+    "ContainingType": "VitrineApi.Controllers.UsuarioController",
     "Method": "VerificarSubdominioExistente",
     "RelativePath": "usuario/verificar-subdominio",
     "HttpMethod": "POST",
@@ -409,26 +427,5 @@
       }
     ],
     "ReturnTypes": []
-  },
-  {
-    "ContainingType": "VitrineApi.Controllers.WeatherForecastController",
-    "Method": "Get",
-    "RelativePath": "WeatherForecast",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[VitrineApi.WeatherForecast, VitrineApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ],
-    "EndpointName": "GetWeatherForecast"
   }
 ]
