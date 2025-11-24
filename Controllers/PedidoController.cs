@@ -1,26 +1,159 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using VitrineApi.Data;
+using VitrineApi.Enums;
 using VitrineApi.Interfaces;
 using VitrineApi.Models;
+using VitrineApi.ViewModels;
 
 [ApiController]
 [Route("/pedido")]
 public class PedidoController : ControllerBase
 {
+    private readonly VitrineDBContext _context;
     private readonly IRepositoryBase<Pedido> _pedidoRepository;
 
-    public PedidoController(IRepositoryBase<Pedido> pedidoRepository)
+    public PedidoController(IRepositoryBase<Pedido> pedidoRepository, VitrineDBContext context)
     {
         _pedidoRepository = pedidoRepository;
+        _context = context;
     }
 
     [HttpPost("cadastrar")]
-    public async Task<IActionResult> CadastrarPedido([FromBody] Pedido model)
+    public async Task<IActionResult> CadastrarPedido([FromBody] ClienteEnderecoPedidoVM model)
     {
         if (!ModelState.IsValid)
+        {
             return BadRequest(ModelState);
+        }
 
-        await _pedidoRepository.IncluirAsync(model);
-        return Ok(new { message = "Pedido cadastrado com sucesso!" });
+        using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            Cliente cliente = null;
+
+            try
+            {
+                cliente = await _context.Cliente
+                    .FirstOrDefaultAsync(c => c.Cpf == model.Cpf);
+
+                if (cliente == null)
+                {
+                    cliente = new Cliente
+                    {
+                        Cpf = model.Cpf,
+                        NomeCompleto = model.NomeCompleto,
+                        Email = model.Email,
+                        Telefone = model.Telefone,
+                        DataCriacao = DateTime.UtcNow
+                    };
+
+                    _context.Cliente.Add(cliente);
+                    await _context.SaveChangesAsync(); 
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Erro ao verificar ou criar cliente.", error = ex.Message });
+            }
+
+            EnderecoEntrega enderecoEntrega = null;
+            try
+            {
+                var endereco = model.EnderecosEntrega.FirstOrDefault();
+
+                if (endereco != null)
+                {
+                    enderecoEntrega = await _context.EnderecoEntrega
+                        .FirstOrDefaultAsync(e => e.CpfCliente == model.Cpf &&
+                                                  e.Numero == endereco.Numero &&
+                                                  e.Cep == endereco.Cep);
+
+                    if (enderecoEntrega == null)
+                    {
+                        enderecoEntrega = new EnderecoEntrega
+                        {
+                            CpfCliente = cliente.Cpf,
+                            Logradouro = endereco.Logradouro,
+                            Numero = endereco.Numero,
+                            Complemento = endereco.Complemento,
+                            Bairro = endereco.Bairro,
+                            Cidade = endereco.Cidade,
+                            Estado = endereco.Estado,
+                            Cep = endereco.Cep
+                        };
+
+                        _context.EnderecoEntrega.Add(enderecoEntrega);
+                        await _context.SaveChangesAsync(); // Salvando o endereço
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Erro ao verificar ou criar o endereço de entrega.", error = ex.Message });
+            }
+
+            foreach (var pedido in model.Pedidos)
+            {
+                try
+                {
+                    decimal valorTotalItens = model.ItensPedido.Sum(item => item.Quantidade * item.PrecoUnitario);
+                    decimal valorTotal = valorTotalItens + pedido.FreteValor;
+
+                    int idEnderecoEntrega = enderecoEntrega?.Id ?? 0;
+
+                    var pedidoEntity = new Pedido
+                    {
+                        CpfCliente = cliente.Cpf,
+                        IdLoja = pedido.IdLoja,
+                        IdEnderecoEntrega = idEnderecoEntrega,
+                        DataPedido = DateTime.UtcNow,
+                        Status = StatusPedido.Pendente,
+                        ValorTotal = valorTotal,
+                        FreteValor = pedido.FreteValor,
+                    };
+
+                    _context.Pedido.Add(pedidoEntity);
+                    await _context.SaveChangesAsync();
+
+                    foreach (var item in model.ItensPedido)
+                    {
+                        try
+                        {
+                            var itemPedido = new ItensPedido
+                            {
+                                IdPedido = pedidoEntity.Id,
+                                IdProduto = item.IdProduto,
+                                Quantidade = item.Quantidade,
+                                PrecoUnitario = item.PrecoUnitario,
+                                PrecoTotal = item.PrecoTotal
+                            };
+
+                            _context.ItensPedido.Add(itemPedido);
+                        }
+                        catch (Exception ex)
+                        {
+                            return StatusCode(500, new { message = "Erro ao adicionar itens ao pedido.", error = ex.Message });
+                        }
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, new { message = "Erro ao criar pedido.", error = ex.Message });
+                }
+            }
+
+            await transaction.CommitAsync();
+
+            return Ok(new { message = "Pedido cadastrado com sucesso!" });
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+
+            return StatusCode(500, new { message = "Ocorreu um erro ao cadastrar o pedido.", error = ex.Message });
+        }
     }
 
     [HttpGet("listar")]

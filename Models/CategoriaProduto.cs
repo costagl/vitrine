@@ -18,7 +18,9 @@ public partial class CategoriaProduto
     [Unicode(false)]
     public string Titulo { get; set; }
 
-    public byte[] Imagem { get; set; }
+    [StringLength(255)]
+    [Unicode(false)]
+    public string ImagemUrl { get; set; }
 
     public int IdCategoriaLoja { get; set; }
 

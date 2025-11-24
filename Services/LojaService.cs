@@ -4,31 +4,34 @@ using VitrineApi.Interfaces;
 using VitrineApi.DTOs;
 using Microsoft.EntityFrameworkCore;
 
-public class LojaService : ILojaService
+namespace VitrineApi.Services
 {
-    private readonly VitrineDBContext _context;
-
-    public LojaService(VitrineDBContext context)
+    public class LojaService : ILojaService
     {
-        _context = context;
-    }
+        private readonly VitrineDBContext _context;
 
-    public async Task<LojaDTO> BuscarPorSubdominio(string subdominio)
-    {
-        var loja = await _context.Loja
-            .Where(l => l.Subdominio == subdominio)
-            .Select(l => new LojaDTO
-            {
-                Id = l.Id,
-                NomeLoja = l.NomeLoja,
-                CategoriaLoja = l.IdCategoriaNavigation.Titulo,
-                IdTema = l.IdTema,
-                IdLayout = l.IdLayout,
-                Subdominio = l.Subdominio,
-                Cpf_Cnpj = l.Cpf_Cnpj,
-            })
-            .FirstOrDefaultAsync();
+        public LojaService(VitrineDBContext context)
+        {
+            _context = context;
+        }
 
-        return loja;
+        public async Task<LojaRequest> BuscarPorSubdominio(string subdominio)
+        {
+            var loja = await _context.Loja
+                .Where(l => l.Subdominio == subdominio)
+                .Select(l => new LojaRequest
+                {
+                    Id = l.Id,
+                    NomeLoja = l.NomeLoja,
+                    CategoriaLoja = l.IdCategoriaNavigation.Titulo,
+                    IdTema = l.IdTema,
+                    IdLayout = l.IdLayout,
+                    Subdominio = l.Subdominio,
+                    Cpf_Cnpj = l.Cpf_Cnpj,
+                })
+                .FirstOrDefaultAsync();
+
+            return loja;
+        }
     }
 }

@@ -1,8 +1,6 @@
-﻿using VitrineApi.Models;
-
-namespace VitrineApi.DTOs
+﻿namespace VitrineApi.ViewModels.Loja
 {
-    public class ProdutoDTO
+    public class AlterarProdutoVM
     {
         public int Id { get; set; }
         public string Titulo { get; set; }
@@ -19,13 +17,5 @@ namespace VitrineApi.DTOs
         public decimal Largura { get; set; }
         public decimal Profundidade { get; set; }
         public int IdCategoriaProduto { get; set; }
-
-        // Categoria Produto
-        public string TituloCategoriaProduto { get; set; }
-
-        // Categoria Loja
-
-        public int IdCategoriaLoja { get; set; }
-        public string TituloCategoriaLoja { get; set; }
     }
 }

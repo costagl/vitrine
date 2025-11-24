@@ -8,38 +8,47 @@ using Microsoft.EntityFrameworkCore;
 
 namespace VitrineApi.Models;
 
-[Index("IdCliente", Name = "IX_EnderecoEntrega_IdCliente")]
+[Index("CpfCliente", Name = "IX_EnderecoEntrega_IdCliente")]
 public partial class EnderecoEntrega
 {
     [Key]
     public int Id { get; set; }
 
-    public int? IdCliente { get; set; }
+    [Required]
+    [StringLength(11)]
+    [Unicode(false)]
+    public string CpfCliente { get; set; }
 
+    [Required]
     [StringLength(200)]
     public string Logradouro { get; set; }
 
-    [StringLength(20)]
+    [Required]
+    [StringLength(5)]
     public string Numero { get; set; }
 
     [StringLength(100)]
     public string Complemento { get; set; }
 
+    [Required]
     [StringLength(100)]
     public string Bairro { get; set; }
 
+    [Required]
     [StringLength(100)]
     public string Cidade { get; set; }
 
-    [StringLength(50)]
+    [Required]
+    [StringLength(100)]
     public string Estado { get; set; }
 
+    [Required]
     [StringLength(20)]
     public string Cep { get; set; }
 
-    [ForeignKey("IdCliente")]
+    [ForeignKey("CpfCliente")]
     [InverseProperty("EnderecoEntrega")]
-    public virtual Cliente IdClienteNavigation { get; set; }
+    public virtual Cliente CpfClienteNavigation { get; set; }
 
     [InverseProperty("IdEnderecoEntregaNavigation")]
     public virtual ICollection<Pedido> Pedido { get; set; } = new List<Pedido>();

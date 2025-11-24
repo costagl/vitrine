@@ -16,19 +16,13 @@ public class CategoriaController : ControllerBase
 {
     private readonly IRepositoryBase<CategoriaProduto> _CatProdRep;
     private readonly IRepositoryBase<CategoriaLoja> _CatLojaRep;
+    private readonly VitrineDBContext _context;
 
-    public CategoriaController(IRepositoryBase<CategoriaProduto> catProdRep, IRepositoryBase<CategoriaLoja> catLojaRep)
+    public CategoriaController(IRepositoryBase<CategoriaProduto> catProdRep, IRepositoryBase<CategoriaLoja> catLojaRep, VitrineDBContext context)
     {
         _CatProdRep = catProdRep;
         _CatLojaRep = catLojaRep;
-    }
-
-    [AllowAnonymous]
-    [HttpGet("produto")]
-    public async Task<IActionResult> ListarCategoriasProduto()
-    {
-        var categoriaProduto = await _CatProdRep.ListarAsync();
-        return Ok(categoriaProduto);
+        _context = context;
     }
 
     [AllowAnonymous]
@@ -37,5 +31,13 @@ public class CategoriaController : ControllerBase
     {
         var categoriaLoja = await _CatLojaRep.ListarAsync();
         return Ok(categoriaLoja);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("produtos/{id}")]
+    public async Task<IActionResult> ListarCategoriasProduto(int id)
+    {
+        var categoriaProduto = await _CatProdRep.ListarAsync(c => c.IdCategoriaLoja == id);
+        return Ok(categoriaProduto);
     }
 }

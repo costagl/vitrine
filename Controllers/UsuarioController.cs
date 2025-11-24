@@ -30,7 +30,6 @@ namespace VitrineApi.Controllers
         private readonly VitrineDBContext _context;
         private readonly Cpf_CnpjValidator _cpfCnpjValidator = new Cpf_CnpjValidator();
         private readonly RepositoryBase<Lojista> _repLojista;
-
         public UsuarioController(SignInManager<LojistaAuth> signInManager, UserManager<LojistaAuth> userManager, IConfiguration config, VitrineDBContext context, Cpf_CnpjValidator cpfCnpjValidator, RepositoryBase<Lojista> repLojista)
         {
             _signInManager = signInManager;
@@ -142,68 +141,11 @@ namespace VitrineApi.Controllers
                         categoria = categoria.Titulo,
                         descricao = loja.Descricao,
                         avaliacao = loja.Avaliacao,
-                        logo = loja.Logotipo
+                        logo = loja.LogotipoUrl
                     }
                 }
             });
         }
-
-
-        //[HttpPost("login")]
-        //public async Task<IActionResult> Login([FromBody] LoginVM model)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return BadRequest(ModelState);
-
-        //    // Realiza a autenticação
-        //    var result = await _signInManager.PasswordSignInAsync(
-        //        model.Email,
-        //        model.Senha,
-        //        model.RememberMe,
-        //        lockoutOnFailure: false
-        //    );
-
-        //    if (result.Succeeded)
-        //    {
-        //        // Recupera o usuário
-        //        var user = await _userManager.FindByEmailAsync(model.Email);
-
-        //        var loja = await _context.Loja.FirstOrDefaultAsync(l => l.Cpf_Cnpj == user.Cpf_Cnpj);
-        //        var lojista = await _context.Lojista.FirstOrDefaultAsync(l => l.Cpf_Cnpj == user.Cpf_Cnpj);
-        //        var categoria = await _context.CategoriaLoja.FirstOrDefaultAsync(c => c.Id == loja.IdCategoria);
-
-        //        var token = GenerateJwtToken(user);
-
-        //        // Retorna os dados do usuário e loja
-        //        return Ok(new
-        //        {
-        //            token,
-        //            user = new
-        //            {
-        //                id = user.Id,
-        //                nome = user.UserName,
-        //                email = user.Email,
-        //                cpfCnpj = user.Cpf_Cnpj,
-        //                telefone = lojista?.Telefone, // Usando operador de nulidade opcional
-
-        //                loja = loja == null ? null : new
-        //                {
-        //                    id = loja.Id,
-        //                    nomeLoja = loja.NomeLoja,
-        //                    subdominio = loja.Subdominio,
-        //                    idCategoria = loja.IdCategoria,
-        //                    categoria = categoria.Titulo, // Usando operador de nulidade opcional
-        //                    descricao = loja.Descricao,
-        //                    avaliacao = loja.Avaliacao,
-        //                    logo = loja.Logotipo
-        //                }
-        //            }
-        //        });
-        //    }
-
-        //    return Unauthorized(new { message = "E-mail ou senha inválidos." });
-        //}
-
 
         [HttpPost("cadastrar")]
         public async Task<IActionResult> Register([FromBody] RegisterVM model)

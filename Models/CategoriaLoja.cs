@@ -18,7 +18,9 @@ public partial class CategoriaLoja
     [Unicode(false)]
     public string Titulo { get; set; }
 
-    public byte[] Imagem { get; set; }
+    [StringLength(255)]
+    [Unicode(false)]
+    public string ImagemUrl { get; set; }
 
     [InverseProperty("IdCategoriaLojaNavigation")]
     public virtual ICollection<CategoriaProduto> CategoriaProduto { get; set; } = new List<CategoriaProduto>();

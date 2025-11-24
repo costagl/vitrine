@@ -15,7 +15,15 @@ public partial class Layout
 
     [Required]
     [StringLength(50)]
-    public string Nome { get; set; }
+    public string Titulo { get; set; }
+
+    [StringLength(255)]
+    [Unicode(false)]
+    public string Descricao { get; set; }
+
+    [StringLength(255)]
+    [Unicode(false)]
+    public string ImagemUrl { get; set; }
 
     [InverseProperty("IdLayoutNavigation")]
     public virtual ICollection<Loja> Loja { get; set; } = new List<Loja>();

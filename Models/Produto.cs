@@ -37,7 +37,7 @@ public partial class Produto
 
     [StringLength(255)]
     [Unicode(false)]
-    public string Imagem { get; set; }
+    public string ImagemUrl { get; set; }
 
     public byte Ativo { get; set; }
 
@@ -45,7 +45,8 @@ public partial class Produto
     public decimal Peso { get; set; }
 
     [Required]
-    [Column(TypeName = "text")]
+    [StringLength(255)]
+    [Unicode(false)]
     public string Descricao { get; set; }
 
     [Column(TypeName = "decimal(10, 2)")]
@@ -58,6 +59,9 @@ public partial class Produto
     public decimal Profundidade { get; set; }
 
     public int IdCategoriaProduto { get; set; }
+
+    [Column(TypeName = "decimal(10, 4)")]
+    public decimal? ValorCusto { get; set; }
 
     [ForeignKey("IdCategoriaProduto")]
     [InverseProperty("Produto")]

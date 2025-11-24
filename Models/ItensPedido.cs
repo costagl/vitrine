@@ -19,17 +19,13 @@ public partial class ItensPedido
 
     public int IdProduto { get; set; }
 
-    [Required]
-    [StringLength(100)]
-    public string NomeProduto { get; set; }
-
     public int Quantidade { get; set; }
 
     [Column(TypeName = "decimal(18, 4)")]
     public decimal PrecoUnitario { get; set; }
 
     [Column(TypeName = "decimal(18, 4)")]
-    public decimal Total { get; set; }
+    public decimal PrecoTotal { get; set; }
 
     [ForeignKey("IdPedido")]
     [InverseProperty("ItensPedido")]

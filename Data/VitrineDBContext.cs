@@ -49,11 +49,16 @@ public partial class VitrineDBContext : IdentityDbContext<LojistaAuth>
                 .HasConstraintName("FK_CategoriaProduto_CategoriaLoja");
         });
 
+        modelBuilder.Entity<Cliente>(entity =>
+        {
+            entity.HasKey(e => e.Cpf).HasName("PK_Cliente_1");
+        });
+
         modelBuilder.Entity<EnderecoEntrega>(entity =>
         {
-            entity.Property(e => e.Id).ValueGeneratedNever();
-
-            entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.EnderecoEntrega).HasConstraintName("FK_EnderecoEntrega_Cliente");
+            entity.HasOne(d => d.CpfClienteNavigation).WithMany(p => p.EnderecoEntrega)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_EnderecoEntrega_Cliente1");
         });
 
         modelBuilder.Entity<ItensPedido>(entity =>
@@ -94,9 +99,9 @@ public partial class VitrineDBContext : IdentityDbContext<LojistaAuth>
 
         modelBuilder.Entity<Pedido>(entity =>
         {
-            entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Pedido)
+            entity.HasOne(d => d.CpfClienteNavigation).WithMany(p => p.Pedido)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Pedido_Cliente");
+                .HasConstraintName("FK_Pedido_Cliente1");
 
             entity.HasOne(d => d.IdEnderecoEntregaNavigation).WithMany(p => p.Pedido)
                 .OnDelete(DeleteBehavior.ClientSetNull)

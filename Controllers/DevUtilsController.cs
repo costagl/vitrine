@@ -137,17 +137,17 @@ namespace DevUtils
             {
                 List<Layout> layouts = new List<Layout>
                 {
-                    new Layout { Nome = "layout-1" },
-                    new Layout { Nome = "layout-2" },
-                    new Layout { Nome = "layout-3" },
-                    new Layout { Nome = "layout-4" },
+                    new Layout { Titulo = "layout-1", Descricao = "Layout sofisticado para moda e acessórios" },
+                    new Layout { Titulo = "layout-2", Descricao = "Design clean e moderno para produtos tecnológicos" },
+                    new Layout { Titulo = "layout-3", Descricao = "Design fofo para peças de biscuit e bolos cenográficos"},
+                    new Layout { Titulo = "layout-4", Descricao = "Layout vibrante para produtos artísticos e criativos" }
                 };
                 List<Tema> temas = new List<Tema>
                 {
-                    new Tema { Nome = "tema-1" },
-                    new Tema { Nome = "tema-2" },
-                    new Tema { Nome = "tema-3" },
-                    new Tema { Nome = "tema-4" },
+                    new Tema { Titulo = "tema-1", Descricao = "Layout sofisticado para moda e acessórios" },
+                    new Tema { Titulo = "tema-2", Descricao = "Design clean e moderno para produtos tecnológicos" },
+                    new Tema { Titulo = "tema-3", Descricao = "Design fofo para peças de biscuit e bolos cenográficos"},
+                    new Tema { Titulo = "tema-4", Descricao = "Layout vibrante para produtos artísticos e criativos" },
                 };
 
                 _context.Layout.AddRange(layouts);

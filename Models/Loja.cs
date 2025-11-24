@@ -42,9 +42,13 @@ public partial class Loja
 
     [StringLength(255)]
     [Unicode(false)]
-    public string Logotipo { get; set; }
+    public string LogotipoUrl { get; set; }
 
     public int IdCategoria { get; set; }
+
+    [StringLength(255)]
+    [Unicode(false)]
+    public string ImagemBannerUrl { get; set; }
 
     [ForeignKey("Cpf_Cnpj")]
     [InverseProperty("Loja")]

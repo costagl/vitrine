@@ -11,7 +11,9 @@ namespace VitrineApi.Models;
 public partial class Cliente
 {
     [Key]
-    public int Id { get; set; }
+    [StringLength(11)]
+    [Unicode(false)]
+    public string Cpf { get; set; }
 
     [Required]
     [StringLength(200)]
@@ -27,11 +29,11 @@ public partial class Cliente
     public string Telefone { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime CriadoEm { get; set; }
+    public DateTime DataCriacao { get; set; }
 
-    [InverseProperty("IdClienteNavigation")]
+    [InverseProperty("CpfClienteNavigation")]
     public virtual ICollection<EnderecoEntrega> EnderecoEntrega { get; set; } = new List<EnderecoEntrega>();
 
-    [InverseProperty("IdClienteNavigation")]
+    [InverseProperty("CpfClienteNavigation")]
     public virtual ICollection<Pedido> Pedido { get; set; } = new List<Pedido>();
 }

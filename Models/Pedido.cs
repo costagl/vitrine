@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using VitrineApi.Enums;
 
 namespace VitrineApi.Models;
 
-[Index("IdCliente", Name = "IX_Pedido_IdCliente")]
+[Index("CpfCliente", Name = "IX_Pedido_IdCliente")]
 [Index("IdEnderecoEntrega", Name = "IX_Pedido_IdEnderecoEntrega")]
 public partial class Pedido
 {
@@ -17,17 +18,20 @@ public partial class Pedido
 
     public int IdLoja { get; set; }
 
-    public int IdCliente { get; set; }
+    [Required]
+    [StringLength(11)]
+    [Unicode(false)]
+    public string CpfCliente { get; set; }
 
     public int IdEnderecoEntrega { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime DataCriacao { get; set; }
+    public DateTime DataPedido { get; set; }
 
     [Required]
     [StringLength(30)]
     [Unicode(false)]
-    public string Status { get; set; }
+    public StatusPedido Status { get; set; }
 
     [Column(TypeName = "decimal(18, 4)")]
     public decimal ValorTotal { get; set; }
@@ -35,7 +39,6 @@ public partial class Pedido
     [Column(TypeName = "decimal(18, 4)")]
     public decimal FreteValor { get; set; }
 
-    [Required]
     [StringLength(100)]
     [Unicode(false)]
     public string FormaPagamento { get; set; }
@@ -44,17 +47,20 @@ public partial class Pedido
     public string CodigoRastreamento { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime DataPagamento { get; set; }
+    public DateTime? DataPagamento { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime DataEnvio { get; set; }
+    public DateTime? DataEnvio { get; set; }
+
+    [Column(TypeName = "datetime")]
+    public DateTime? DataEntrega { get; set; }
 
     [StringLength(500)]
     public string Observacoes { get; set; }
 
-    [ForeignKey("IdCliente")]
+    [ForeignKey("CpfCliente")]
     [InverseProperty("Pedido")]
-    public virtual Cliente IdClienteNavigation { get; set; }
+    public virtual Cliente CpfClienteNavigation { get; set; }
 
     [ForeignKey("IdEnderecoEntrega")]
     [InverseProperty("Pedido")]

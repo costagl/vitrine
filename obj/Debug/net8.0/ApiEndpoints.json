@@ -12,11 +12,17 @@
   {
     "ContainingType": "CategoriaController",
     "Method": "ListarCategoriasProduto",
-    "RelativePath": "categoria/produto",
+    "RelativePath": "categoria/produtos/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -50,7 +56,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.CatalogoController",
+    "ContainingType": "VitrineApi.Controllers.LojaController",
     "Method": "ListarLojas",
     "RelativePath": "lojas",
     "HttpMethod": "GET",
@@ -60,29 +66,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.CatalogoController",
-    "Method": "Post",
-    "RelativePath": "lojas",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "value",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "VitrineApi.Controllers.CatalogoController",
+    "ContainingType": "VitrineApi.Controllers.LojaController",
     "Method": "ListarLoja",
     "RelativePath": "lojas/{id}",
     "HttpMethod": "GET",
@@ -98,9 +82,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.CatalogoController",
+    "ContainingType": "VitrineApi.Controllers.LojaController",
     "Method": "Put",
-    "RelativePath": "lojas/{id}",
+    "RelativePath": "lojas/alterar-layout-tema/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -111,40 +95,22 @@
         "IsRequired": true
       },
       {
-        "Name": "value",
-        "Type": "System.String",
+        "Name": "request",
+        "Type": "VitrineApi.DTOs.AlterarLayoutTemaRequest",
         "IsRequired": true
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.CatalogoController",
-    "Method": "Delete",
-    "RelativePath": "lojas/{id}",
-    "HttpMethod": "DELETE",
+    "ContainingType": "VitrineApi.Controllers.LojaController",
+    "Method": "ListarLayoutTemas",
+    "RelativePath": "lojas/listar-layout-temas",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 200
-      }
-    ]
+    "Parameters": [],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "PedidoController",
@@ -177,7 +143,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "VitrineApi.Models.Pedido",
+        "Type": "ClienteEnderecoPedidoVM",
         "IsRequired": true
       }
     ],
@@ -227,7 +193,7 @@
   },
   {
     "ContainingType": "ProdutoController",
-    "Method": "Atualizar",
+    "Method": "Alterar",
     "RelativePath": "produto/alterar/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -240,7 +206,7 @@
       },
       {
         "Name": "model",
-        "Type": "VitrineApi.Models.Produto",
+        "Type": "VitrineApi.ViewModels.Loja.AlterarProdutoVM",
         "IsRequired": true
       }
     ],
@@ -260,26 +226,6 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ProdutoController",
-    "Method": "ListarCategoriasLoja",
-    "RelativePath": "produto/categoria-loja",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ProdutoController",
-    "Method": "ListarCategoriasProduto",
-    "RelativePath": "produto/categoria-produto",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {
