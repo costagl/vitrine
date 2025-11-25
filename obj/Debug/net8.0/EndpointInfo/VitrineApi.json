@@ -76,7 +76,7 @@
         }
       }
     },
-    "/lojas": {
+    "/loja": {
       "get": {
         "tags": [
           "Loja"
@@ -88,7 +88,7 @@
         }
       }
     },
-    "/lojas/{id}": {
+    "/loja/{id}": {
       "get": {
         "tags": [
           "Loja"
@@ -111,7 +111,29 @@
         }
       }
     },
-    "/lojas/listar-layout-temas": {
+    "/vitrine/{subdominio}": {
+      "get": {
+        "tags": [
+          "Loja"
+        ],
+        "parameters": [
+          {
+            "name": "subdominio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/loja/listar-layouts-temas": {
       "get": {
         "tags": [
           "Loja"
@@ -123,7 +145,7 @@
         }
       }
     },
-    "/lojas/alterar-layout-tema/{id}": {
+    "/loja/alterar-layout-tema/{id}": {
       "put": {
         "tags": [
           "Loja"
@@ -158,6 +180,60 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/loja/verificar-subdominio": {
+      "post": {
+        "tags": [
+          "Loja"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificarSubdominioVM"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificarSubdominioVM"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificarSubdominioVM"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/loja/verificar-layout-tema/{idLoja}": {
+      "get": {
+        "tags": [
+          "Loja"
+        ],
+        "parameters": [
+          {
+            "name": "idLoja",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success"
@@ -296,6 +372,18 @@
         }
       }
     },
+    "/produto/debug-token": {
+      "get": {
+        "tags": [
+          "Produto"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/produto/cadastrar": {
       "post": {
         "tags": [
@@ -305,33 +393,21 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Produto"
+                "$ref": "#/components/schemas/ProdutoRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Produto"
+                "$ref": "#/components/schemas/ProdutoRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Produto"
+                "$ref": "#/components/schemas/ProdutoRequest"
               }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/produto/debug-token": {
-      "get": {
-        "tags": [
-          "Produto"
-        ],
         "responses": {
           "200": {
             "description": "Success"
@@ -394,17 +470,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AlterarProdutoVM"
+                "$ref": "#/components/schemas/ProdutoRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AlterarProdutoVM"
+                "$ref": "#/components/schemas/ProdutoRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AlterarProdutoVM"
+                "$ref": "#/components/schemas/ProdutoRequest"
               }
             }
           }
@@ -525,49 +601,6 @@
         }
       }
     },
-    "/usuario/verificar-subdominio": {
-      "post": {
-        "tags": [
-          "Usuario"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerificarSubdominioVM"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerificarSubdominioVM"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerificarSubdominioVM"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/usuario/verificar-layout-tema": {
-      "get": {
-        "tags": [
-          "Usuario"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
     "/usuario/validar-cpf-cnpj": {
       "post": {
         "tags": [
@@ -607,78 +640,13 @@
         "properties": {
           "novoLayoutId": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "novoTemaId": {
             "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "AlterarProdutoVM": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "titulo": {
-            "type": "string",
+            "format": "int32",
             "nullable": true
-          },
-          "idLoja": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "valorUnitario": {
-            "type": "number",
-            "format": "double"
-          },
-          "valorPromocional": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "estoque": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "sku": {
-            "type": "string",
-            "nullable": true
-          },
-          "imagem": {
-            "type": "string",
-            "nullable": true
-          },
-          "ativo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "peso": {
-            "type": "number",
-            "format": "double"
-          },
-          "descricao": {
-            "type": "string",
-            "nullable": true
-          },
-          "altura": {
-            "type": "number",
-            "format": "double"
-          },
-          "largura": {
-            "type": "number",
-            "format": "double"
-          },
-          "profundidade": {
-            "type": "number",
-            "format": "double"
-          },
-          "idCategoriaProduto": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1468,6 +1436,73 @@
         },
         "additionalProperties": false
       },
+      "ProdutoRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "titulo": {
+            "type": "string",
+            "nullable": true
+          },
+          "idLoja": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "valorUnitario": {
+            "type": "number",
+            "format": "double"
+          },
+          "valorPromocional": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "estoque": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "imagem": {
+            "type": "string",
+            "nullable": true
+          },
+          "ativo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "peso": {
+            "type": "number",
+            "format": "double"
+          },
+          "descricao": {
+            "type": "string",
+            "nullable": true
+          },
+          "altura": {
+            "type": "number",
+            "format": "double"
+          },
+          "largura": {
+            "type": "number",
+            "format": "double"
+          },
+          "profundidade": {
+            "type": "number",
+            "format": "double"
+          },
+          "idCategoriaProduto": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "RegisterVM": {
         "required": [
           "confirmarSenha",
@@ -1549,14 +1584,20 @@
             "minLength": 0,
             "type": "string"
           },
-          "descricao": {
-            "maxLength": 255,
+          "corPrimaria": {
+            "maxLength": 10,
             "minLength": 0,
             "type": "string",
             "nullable": true
           },
-          "imagemUrl": {
-            "maxLength": 255,
+          "corSecundaria": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "realce": {
+            "maxLength": 10,
             "minLength": 0,
             "type": "string",
             "nullable": true

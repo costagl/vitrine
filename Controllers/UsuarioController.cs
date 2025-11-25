@@ -154,7 +154,7 @@ namespace VitrineApi.Controllers
                 return BadRequest(ModelState);
 
             if (_context.Lojista.Any(l => l.Cpf_Cnpj == model.Cpf_Cnpj))
-                return BadRequest("CPF já cadastrado.");
+                return Ok("CPF já cadastrado.");
 
             using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -168,7 +168,7 @@ namespace VitrineApi.Controllers
                 }
                 catch (FormatException)
                 {
-                    return BadRequest(new { message = "Data de nascimento inválida. Use o formato dd-MM-yyyy ou dd/MM/yyyy." });
+                    return Ok(new { message = "Data de nascimento inválida. Use o formato dd-MM-yyyy ou dd/MM/yyyy." });
                 }
 
                 var lojista = new Lojista
@@ -195,7 +195,7 @@ namespace VitrineApi.Controllers
                 if (!result.Succeeded)
                     return BadRequest(result.Errors); // A transação vai ser descartada no `finally` se não der commit
 
-                var loja = new Loja
+                var loja = new Models.Loja
                 {
                     NomeLoja = model.NomeLoja,
                     IdCategoria = model.IdCategoriaLoja,
@@ -228,54 +228,6 @@ namespace VitrineApi.Controllers
             return Ok(new { message = "Logout bem-sucedido!" });
         }
 
-        // TODO: Métodos HTTP da LOJA
-
-        [HttpPost("verificar-subdominio")]
-        public async Task<IActionResult> VerificarSubdominioExistente([FromBody] VerificarSubdominioVM request)
-        {
-            if (string.IsNullOrWhiteSpace(request.Subdominio))
-            {
-                return BadRequest(new { message = "Subdomínio não pode ser vazio." });
-            }
-                
-            bool existe = (await new RepositoryBase<Loja>(_context).ListarAsync(
-                c => c.Subdominio.ToLower() == request.Subdominio.ToLower())).Any();
-
-            return Ok(new { disponivel = !existe });
-        
-        }
-
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet("verificar-layout-tema")]
-        public async Task<IActionResult> VerificarLayoutTema()
-        {
-            var token = Request.Headers["Authorization"];
-            Console.WriteLine("JWT recebido: " + token);
-
-            // Encontrar o usuário pelo ID (obtido do contexto de autenticação)
-            var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
-
-            if (user == null)
-            {
-                return BadRequest(new { message = "Usuário não autenticado." });
-            }
-
-            string userCpf = user.Cpf_Cnpj;
-
-            // Buscar a loja associada ao CPF do usuário
-            var loja = await _context.Loja
-                .Where(l => l.Cpf_Cnpj == user.Cpf_Cnpj)
-                .Select(l => new { l.IdTema, l.IdLayout })
-                .FirstOrDefaultAsync();
-
-            if (loja == null)
-            {
-                return BadRequest(new { message = "Loja não encontrada para o usuário." });
-            }
-
-            return Ok(new { loja.IdTema, loja.IdLayout });
-        }
-
         [HttpPost("validar-cpf-cnpj")]
         public async Task<IActionResult> ValidarCpfOuCnpj([FromBody] ValidateCpfCnpjVM request)
         {
@@ -286,12 +238,12 @@ namespace VitrineApi.Controllers
 
             if (cpfOucnpjExistente.Any())
             {
-                return BadRequest(new { isValid = false, message = "CPF/CNPJ já cadastrado." });
+                return Ok(new { isValid = false, message = "CPF/CNPJ já cadastrado." });
             }
 
             if (string.IsNullOrWhiteSpace(request.Cpf_Cnpj))
             {
-                return BadRequest(new { isValid = false, message = "CPF/CNPJ não pode ser vazio." });
+                return Ok(new { isValid = false, message = "CPF/CNPJ não pode ser vazio." });
             }
 
             // Verifica se o CPF/CNPJ é de tamanho 11 (CPF)

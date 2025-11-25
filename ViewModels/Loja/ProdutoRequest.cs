@@ -1,6 +1,6 @@
 ﻿namespace VitrineApi.ViewModels.Loja
 {
-    public class AlterarProdutoVM
+    public class ProdutoRequest
     {
         public int Id { get; set; }
         public string Titulo { get; set; }

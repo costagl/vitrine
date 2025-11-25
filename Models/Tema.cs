@@ -17,13 +17,14 @@ public partial class Tema
     [StringLength(50)]
     public string Titulo { get; set; }
 
-    [StringLength(255)]
-    [Unicode(false)]
-    public string Descricao { get; set; }
+    [StringLength(10)]
+    public string CorPrimaria { get; set; }
 
-    [StringLength(255)]
-    [Unicode(false)]
-    public string ImagemUrl { get; set; }
+    [StringLength(10)]
+    public string CorSecundaria { get; set; }
+
+    [StringLength(10)]
+    public string Realce { get; set; }
 
     [InverseProperty("IdTemaNavigation")]
     public virtual ICollection<Loja> Loja { get; set; } = new List<Loja>();

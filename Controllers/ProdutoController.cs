@@ -32,8 +32,15 @@ public class ProdutoController : ControllerBase
         _mapper = mapper;
     }
 
+    [HttpGet("debug-token")]
+    public IActionResult DebugToken()
+    {
+        var claims = User.Claims.Select(c => new { c.Type, c.Value });
+        return Ok(claims);
+    }
+
     [HttpPost("cadastrar")]
-    public async Task<IActionResult> Cadastrar([FromBody] Produto model)
+    public async Task<IActionResult> Cadastrar([FromBody] ProdutoRequest model)
     {
         var token = Request.Headers["Authorization"];
         Console.WriteLine("JWT recebido: " + token);
@@ -50,16 +57,16 @@ public class ProdutoController : ControllerBase
 
         model.IdLoja = loja.Id;
 
-        var dto = new ProdutoDTO
+        var produtoRequest = new Produto
         {
-            Id = model.Id,
+            Id = model.Id,                                      
             Titulo = model.Titulo,
             IdLoja = model.IdLoja,
             ValorUnitario = model.ValorUnitario,
             ValorPromocional = model.ValorPromocional,
             Estoque = model.Estoque,
             Sku = model.Sku,
-            Imagem = model.ImagemUrl,
+            ImagemUrl = model.Imagem,
             Ativo = model.Ativo,
             Peso = model.Peso,
             Descricao = model.Descricao,
@@ -69,17 +76,10 @@ public class ProdutoController : ControllerBase
             IdCategoriaProduto = model.IdCategoriaProduto,
         };
 
-        await _context.Produto.AddAsync(model);
+        await _context.Produto.AddAsync(produtoRequest);
         await _context.SaveChangesAsync();
 
-        return Ok(new { message = "Produto cadastrado com sucesso!", produto = dto });
-    }
-
-    [HttpGet("debug-token")]
-    public IActionResult DebugToken()
-    {
-        var claims = User.Claims.Select(c => new { c.Type, c.Value });
-        return Ok(claims);
+        return Ok(new { message = "Produto cadastrado com sucesso!", produto = produtoRequest });
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -114,7 +114,7 @@ public class ProdutoController : ControllerBase
     }
 
     [HttpPut("alterar/{id}")]
-    public async Task<IActionResult> Alterar(int id, [FromBody] AlterarProdutoVM model)
+    public async Task<IActionResult> Alterar(int id, [FromBody] ProdutoRequest model)
     {
         model.Id = id;
         if (id != model.Id)

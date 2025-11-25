@@ -58,7 +58,7 @@
   {
     "ContainingType": "VitrineApi.Controllers.LojaController",
     "Method": "ListarLojas",
-    "RelativePath": "lojas",
+    "RelativePath": "loja",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -68,7 +68,7 @@
   {
     "ContainingType": "VitrineApi.Controllers.LojaController",
     "Method": "ListarLoja",
-    "RelativePath": "lojas/{id}",
+    "RelativePath": "loja/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -84,7 +84,7 @@
   {
     "ContainingType": "VitrineApi.Controllers.LojaController",
     "Method": "Put",
-    "RelativePath": "lojas/alterar-layout-tema/{id}",
+    "RelativePath": "loja/alterar-layout-tema/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -104,12 +104,44 @@
   },
   {
     "ContainingType": "VitrineApi.Controllers.LojaController",
-    "Method": "ListarLayoutTemas",
-    "RelativePath": "lojas/listar-layout-temas",
+    "Method": "ListarLayoutsTemas",
+    "RelativePath": "loja/listar-layouts-temas",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VitrineApi.Controllers.LojaController",
+    "Method": "VerificarLayoutTema",
+    "RelativePath": "loja/verificar-layout-tema/{idLoja}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idLoja",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "VitrineApi.Controllers.LojaController",
+    "Method": "VerificarSubdominioExistente",
+    "RelativePath": "loja/verificar-subdominio",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "VitrineApi.ViewModels.Loja.VerificarSubdominioVM",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -206,7 +238,7 @@
       },
       {
         "Name": "model",
-        "Type": "VitrineApi.ViewModels.Loja.AlterarProdutoVM",
+        "Type": "VitrineApi.ViewModels.Loja.ProdutoRequest",
         "IsRequired": true
       }
     ],
@@ -222,7 +254,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "VitrineApi.Models.Produto",
+        "Type": "VitrineApi.ViewModels.Loja.ProdutoRequest",
         "IsRequired": true
       }
     ],
@@ -349,26 +381,16 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "VitrineApi.Controllers.UsuarioController",
-    "Method": "VerificarLayoutTema",
-    "RelativePath": "usuario/verificar-layout-tema",
+    "ContainingType": "VitrineApi.Controllers.LojaController",
+    "Method": "ListarLojaLojistaProdutos",
+    "RelativePath": "vitrine/{subdominio}",
     "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "VitrineApi.Controllers.UsuarioController",
-    "Method": "VerificarSubdominioExistente",
-    "RelativePath": "usuario/verificar-subdominio",
-    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "request",
-        "Type": "VitrineApi.ViewModels.Loja.VerificarSubdominioVM",
+        "Name": "subdominio",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],

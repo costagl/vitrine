@@ -1,16 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using Microsoft.AspNetCore.Mvc;
 using VitrineApi.Data;
-using VitrineApi.Interfaces;
 using VitrineApi.Models;
-using VitrineApi.ViewModels;
+
 
 namespace DevUtils
 {
@@ -136,19 +127,57 @@ namespace DevUtils
             else
             {
                 List<Layout> layouts = new List<Layout>
-                {
-                    new Layout { Titulo = "layout-1", Descricao = "Layout sofisticado para moda e acessórios" },
-                    new Layout { Titulo = "layout-2", Descricao = "Design clean e moderno para produtos tecnológicos" },
-                    new Layout { Titulo = "layout-3", Descricao = "Design fofo para peças de biscuit e bolos cenográficos"},
-                    new Layout { Titulo = "layout-4", Descricao = "Layout vibrante para produtos artísticos e criativos" }
-                };
+        {
+            new Layout { Titulo = "layout-1", Descricao = "Layout sofisticado para moda e acessórios" },
+            new Layout { Titulo = "layout-2", Descricao = "Design clean e moderno para produtos tecnológicos" },
+            new Layout { Titulo = "layout-3", Descricao = "Design fofo para peças de biscuit e bolos cenográficos" },
+        };
+
                 List<Tema> temas = new List<Tema>
-                {
-                    new Tema { Titulo = "tema-1", Descricao = "Layout sofisticado para moda e acessórios" },
-                    new Tema { Titulo = "tema-2", Descricao = "Design clean e moderno para produtos tecnológicos" },
-                    new Tema { Titulo = "tema-3", Descricao = "Design fofo para peças de biscuit e bolos cenográficos"},
-                    new Tema { Titulo = "tema-4", Descricao = "Layout vibrante para produtos artísticos e criativos" },
-                };
+        {
+            new Tema
+            {
+                Titulo = "Azul Profissional",
+                CorPrimaria = "#2563eb",
+                CorSecundaria = "#64748b",
+                Realce = "#0ea5e9"
+            },
+            new Tema
+            {
+                Titulo = "Roxo Moderno",
+                CorPrimaria = "#4400FF",
+                CorSecundaria = "#8b5cf6",
+                Realce = "#a855f7"
+            },
+            new Tema
+            {
+                Titulo = "Verde Natural",
+                CorPrimaria = "#059669",
+                CorSecundaria = "#10b981",
+                Realce = "#34d399"
+            },
+            new Tema
+            {
+                Titulo = "Laranja Energético",
+                CorPrimaria = "#ea580c",
+                CorSecundaria = "#f97316",
+                Realce = "#fb923c"
+            },
+            new Tema
+            {
+                Titulo = "Rosa Criativo",
+                CorPrimaria = "#db2777",
+                CorSecundaria = "#ec4899",
+                Realce = "#f472b6"
+            },
+            new Tema
+            {
+                Titulo = "Azul Turquesa",
+                CorPrimaria = "#0d9488",
+                CorSecundaria = "#14b8a6",
+                Realce = "#2dd4bf"
+            }
+        };
 
                 _context.Layout.AddRange(layouts);
                 _context.Tema.AddRange(temas);
@@ -156,5 +185,6 @@ namespace DevUtils
                 return Ok(new { message = "Dados adicionados." });
             }
         }
+
     }
 }

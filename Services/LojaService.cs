@@ -15,11 +15,11 @@ namespace VitrineApi.Services
             _context = context;
         }
 
-        public async Task<LojaRequest> BuscarPorSubdominio(string subdominio)
+        public async Task<LojaDto> BuscarPorSubdominio(string subdominio)
         {
             var loja = await _context.Loja
                 .Where(l => l.Subdominio == subdominio)
-                .Select(l => new LojaRequest
+                .Select(l => new LojaDto
                 {
                     Id = l.Id,
                     NomeLoja = l.NomeLoja,
