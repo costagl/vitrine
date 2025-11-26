@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VitrineApi.Data;
 using VitrineApi.DTOs;
+using VitrineApi.Helpers;
 using VitrineApi.Interfaces;
 using VitrineApi.Models;
 using VitrineApi.ViewModels.Loja;
@@ -21,14 +22,16 @@ namespace VitrineApi.Controllers
         private readonly ILojaService _lojaService;
         private readonly SignInManager<LojistaAuth> _signInManager;
         private readonly UserManager<LojistaAuth> _userManager;
+        private readonly DbEsgotado _dbEsgotado;
 
-        public LojaController(VitrineDBContext context, RepositoryBase<Loja> lojaRepo, ILojaService lojaService, SignInManager<LojistaAuth> signInManager, UserManager<LojistaAuth> userManager)
+        public LojaController(VitrineDBContext context, RepositoryBase<Loja> lojaRepo, ILojaService lojaService, SignInManager<LojistaAuth> signInManager, UserManager<LojistaAuth> userManager, DbEsgotado dbEsgotado)
         {
             _context = context;
             _lojaRepo = lojaRepo;
             _lojaService = lojaService;
             _signInManager = signInManager;
             _userManager = userManager;
+            _dbEsgotado = dbEsgotado;
         }
 
         [HttpGet("loja")]

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VitrineApi.Data;
+using VitrineApi.Helpers;
 using VitrineApi.Models;
-
 
 namespace DevUtils
 {
@@ -10,15 +10,23 @@ namespace DevUtils
     public class DevUtilsController : Controller
     {
         private VitrineDBContext _context;
+        private readonly DbEsgotado _dbEsgotado;
 
-        public DevUtilsController(VitrineDBContext context)
+
+        public DevUtilsController(VitrineDBContext context, DbEsgotado dbEsgotado)
         {
             _context = context;
+            _dbEsgotado = dbEsgotado;
         }
 
         [HttpPost("adicionar-categorias-produto")]
         public async Task<IActionResult> AdicionarCategoriasProduto()
         {
+            if (_dbEsgotado.VerificarBancoEsgotado())
+            {
+                return StatusCode(500, new { message = "Banco de dados esgotado." });
+            }
+
             if (_context.CategoriaProduto.Any())
             {
                 return Conflict(new { message = "A tabela já contém dados." });
@@ -90,6 +98,11 @@ namespace DevUtils
         [HttpPost("adicionar-categorias-loja")]
         public async Task<IActionResult> AdicionarCategoriasLoja()
         {
+            if (_dbEsgotado.VerificarBancoEsgotado())
+            {
+                return StatusCode(500, new { message = "Banco de dados esgotado." });
+            }
+
             if (_context.CategoriaLoja.Any())
             {
                 return Conflict(new { message = "A tabela já contém dados." });
@@ -120,6 +133,11 @@ namespace DevUtils
         [HttpPost("adicionar-layout-tema")]
         public async Task<IActionResult> AdicionarLayoutTema()
         {
+            if (_dbEsgotado.VerificarBancoEsgotado())
+            {
+                return StatusCode(500, new { message = "Banco de dados esgotado." });
+            }
+
             if (_context.Layout.Any() || _context.Tema.Any())
             {
                 return Conflict(new { message = "A tabela já contém dados." });

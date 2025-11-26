@@ -183,6 +183,16 @@
   },
   {
     "ContainingType": "PedidoController",
+    "Method": "TesteDbEsgotado",
+    "RelativePath": "pedido/db-esgotado",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PedidoController",
     "Method": "ListarPedidos",
     "RelativePath": "pedido/listar",
     "HttpMethod": "GET",

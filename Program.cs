@@ -6,6 +6,7 @@ using NuGet.Common;
 using System.Text;
 using System.Text.Json.Serialization;
 using VitrineApi.Data;
+using VitrineApi.Helpers;
 using VitrineApi.Interfaces;
 using VitrineApi.Mappings;
 using VitrineApi.Models;
@@ -56,7 +57,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-    options.LoginPath = "/usuario/login"; // qualquer rota inexistente ou customizada
+    options.LoginPath = "/usuario/login";
     options.AccessDeniedPath = "/usuario/login";
     options.SlidingExpiration = true;
 
@@ -128,6 +129,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<DbEsgotado>();
 builder.Services.AddScoped<ILojaService, LojaService>();
 builder.Services.AddScoped<ProdutoService>();
 builder.Services.AddScoped<Cpf_CnpjValidator>();
@@ -184,7 +186,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<LojaMiddleware>();
-//app.UseMiddleware<RateLimiterMiddleware>();
+app.UseMiddleware<RateLimiterMiddleware>();
 
 app.MapControllers();
 

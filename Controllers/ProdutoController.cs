@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VitrineApi.Data;
 using VitrineApi.DTOs;
+using VitrineApi.Helpers;
 using VitrineApi.Interfaces;
 using VitrineApi.Mappings;
 using VitrineApi.Models;
@@ -22,14 +23,16 @@ public class ProdutoController : ControllerBase
     private readonly VitrineDBContext _context;
     private readonly ProdutoService _produtoService;
     private readonly IMapper _mapper;
+    private readonly DbEsgotado _dbEsgotado;
 
-    public ProdutoController(IRepositoryBase<Produto> produtoRepo, UserManager<LojistaAuth> userManager, VitrineDBContext context, ProdutoService produtoService, IMapper mapper)
+    public ProdutoController(IRepositoryBase<Produto> produtoRepo, UserManager<LojistaAuth> userManager, VitrineDBContext context, ProdutoService produtoService, IMapper mapper, DbEsgotado dbEsgotado)
     {
         _produtoRepo = produtoRepo;
         _userManager = userManager;
         _context = context;
         _produtoService = produtoService;
         _mapper = mapper;
+        _dbEsgotado = dbEsgotado;
     }
 
     [HttpGet("debug-token")]
@@ -42,6 +45,10 @@ public class ProdutoController : ControllerBase
     [HttpPost("cadastrar")]
     public async Task<IActionResult> Cadastrar([FromBody] ProdutoRequest model)
     {
+        if (_dbEsgotado.VerificarBancoEsgotado())
+        {
+            return StatusCode(500, new { message = "Banco de dados esgotado." });
+        }
         var token = Request.Headers["Authorization"];
         Console.WriteLine("JWT recebido: " + token);
 

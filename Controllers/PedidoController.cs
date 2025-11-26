@@ -5,6 +5,7 @@ using VitrineApi.Enums;
 using VitrineApi.Interfaces;
 using VitrineApi.Models;
 using VitrineApi.ViewModels;
+using VitrineApi.Helpers;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 [ApiController]
@@ -13,16 +14,38 @@ public class PedidoController : ControllerBase
 {
     private readonly VitrineDBContext _context;
     private readonly IRepositoryBase<Pedido> _pedidoRepository;
+    private readonly DbEsgotado _dbEsgotado;
 
-    public PedidoController(IRepositoryBase<Pedido> pedidoRepository, VitrineDBContext context)
+    public PedidoController(VitrineDBContext context, IRepositoryBase<Pedido> pedidoRepository, DbEsgotado dbEsgotado)
     {
-        _pedidoRepository = pedidoRepository;
         _context = context;
+        _pedidoRepository = pedidoRepository;
+        _dbEsgotado = dbEsgotado;
     }
 
-    [HttpPost("cadastrar")]
+
+    //[HttpGet("db-esgotado")]
+    //public IActionResult TesteDbEsgotado()
+    //{
+    //    if (_dbEsgotado.VerificarBancoEsgotado())
+    //    {
+    //        return Ok(new { message = "Banco de dados esgotado." });
+    //    }
+    //    else
+    //    {
+    //        return Ok(new { message = "Ainda há armazenamento no banco de dados." });
+    //    }
+    //}
+
+        [HttpPost("cadastrar")]
     public async Task<IActionResult> CadastrarPedido([FromBody] ClienteEnderecoPedidoVM model)
     {
+
+        if (_dbEsgotado.VerificarBancoEsgotado())
+        {
+            return StatusCode(500, new { message = "Banco de dados esgotado." });
+        }
+
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
@@ -99,6 +122,11 @@ public class PedidoController : ControllerBase
                 return StatusCode(500, new { message = "Erro ao verificar ou criar o endereço de entrega.", error = ex.Message });
             }
 
+            if (model.Pedidos[0].IdLoja == 0)
+            {
+                return StatusCode(500, new { message = "Erro ao verificar ou criar pedido" });
+            }
+
             foreach (var pedido in model.Pedidos)
             {
                 try
@@ -108,12 +136,15 @@ public class PedidoController : ControllerBase
 
                     int idEnderecoEntrega = enderecoEntrega?.Id ?? 0;
 
+                    var brasilTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+                    var horaBrasilia = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, brasilTimeZone);
+
                     var pedidoEntity = new Pedido
                     {
                         CpfCliente = cliente.Cpf,
                         IdLoja = pedido.IdLoja,
                         IdEnderecoEntrega = idEnderecoEntrega,
-                        DataPedido = DateTime.UtcNow,
+                        DataPedido = horaBrasilia,
                         Status = StatusPedido.Pendente,
                         ValorTotal = valorTotal,
                         FreteValor = pedido.FreteValor,

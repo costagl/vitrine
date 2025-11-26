@@ -10,11 +10,12 @@ using System.Security.Claims;
 using System.Text;
 using VitrineApi.Data;
 using VitrineApi.DTOs;
+using VitrineApi.Helpers;
 using VitrineApi.Interfaces;
 using VitrineApi.Models;
+using VitrineApi.Validators;
 using VitrineApi.ViewModels;
 using VitrineApi.ViewModels.Loja;
-using VitrineApi.Validators;
 
 namespace VitrineApi.Controllers
 {
@@ -30,7 +31,9 @@ namespace VitrineApi.Controllers
         private readonly VitrineDBContext _context;
         private readonly Cpf_CnpjValidator _cpfCnpjValidator = new Cpf_CnpjValidator();
         private readonly RepositoryBase<Lojista> _repLojista;
-        public UsuarioController(SignInManager<LojistaAuth> signInManager, UserManager<LojistaAuth> userManager, IConfiguration config, VitrineDBContext context, Cpf_CnpjValidator cpfCnpjValidator, RepositoryBase<Lojista> repLojista)
+        private readonly DbEsgotado _dbEsgotado;
+
+        public UsuarioController(SignInManager<LojistaAuth> signInManager, UserManager<LojistaAuth> userManager, IConfiguration config, VitrineDBContext context, Cpf_CnpjValidator cpfCnpjValidator, RepositoryBase<Lojista> repLojista, DbEsgotado dbEsgotado)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -38,6 +41,7 @@ namespace VitrineApi.Controllers
             _context = context;
             _cpfCnpjValidator = cpfCnpjValidator;
             _repLojista = repLojista;
+            _dbEsgotado = dbEsgotado;
         }
 
         [HttpGet("health")]
@@ -72,6 +76,11 @@ namespace VitrineApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginVM model)
         {
+            if (_dbEsgotado.VerificarBancoEsgotado())
+            {
+                return StatusCode(500, new { message = "Banco de dados esgotado." });
+            }
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
