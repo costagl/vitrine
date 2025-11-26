@@ -169,8 +169,6 @@ namespace VitrineApi.Controllers
             return Ok(new { lojaRequest });
         }
 
-
-
         [HttpGet("loja/listar-layouts-temas")]
         public async Task<IActionResult> ListarLayoutsTemas()
         {
@@ -251,8 +249,7 @@ namespace VitrineApi.Controllers
 
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [HttpGet("loja/verificar-layout-tema/{idLoja}")]
+        [HttpGet("loja/layout-tema/{idLoja}")]
         public async Task<IActionResult> VerificarLayoutTema(int idLoja)
         {
             var loja = await _context.Loja

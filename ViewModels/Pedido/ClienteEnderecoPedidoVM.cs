@@ -12,7 +12,7 @@ public class ClienteEnderecoPedidoVM
     public DateTime CriadoEm { get; set; }
 
     // Propriedades de EnderecoEntrega
-    public List<EnderecoEntregaVM> EnderecosEntrega { get; set; }
+    public EnderecoEntregaVM EnderecoEntrega { get; set; }
 
     // Propriedades de Pedido
     public List<PedidoVM> Pedidos { get; set; }

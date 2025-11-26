@@ -218,7 +218,7 @@
         }
       }
     },
-    "/loja/verificar-layout-tema/{idLoja}": {
+    "/loja/layout-tema/{idLoja}": {
       "get": {
         "tags": [
           "Loja"
@@ -800,12 +800,8 @@
             "type": "string",
             "format": "date-time"
           },
-          "enderecosEntrega": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EnderecoEntregaVM"
-            },
-            "nullable": true
+          "enderecoEntrega": {
+            "$ref": "#/components/schemas/EnderecoEntregaVM"
           },
           "pedidos": {
             "type": "array",

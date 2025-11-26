@@ -5,6 +5,7 @@ using VitrineApi.Enums;
 using VitrineApi.Interfaces;
 using VitrineApi.Models;
 using VitrineApi.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 [ApiController]
 [Route("/pedido")]
@@ -26,6 +27,9 @@ public class PedidoController : ControllerBase
         {
             return BadRequest(ModelState);
         }
+
+        // Removido caracteres não numéricos do CPF
+        model.Cpf = new string(model.Cpf.Where(char.IsDigit).ToArray());
 
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
@@ -49,7 +53,8 @@ public class PedidoController : ControllerBase
                     };
 
                     _context.Cliente.Add(cliente);
-                    await _context.SaveChangesAsync(); 
+                    Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                    await _context.SaveChangesAsync();
                 }
             }
             catch (Exception ex)
@@ -60,7 +65,8 @@ public class PedidoController : ControllerBase
             EnderecoEntrega enderecoEntrega = null;
             try
             {
-                var endereco = model.EnderecosEntrega.FirstOrDefault();
+                // Aqui acessamos diretamente o objeto `EnderecoEntrega` (não mais um array)
+                var endereco = model.EnderecoEntrega;
 
                 if (endereco != null)
                 {
@@ -146,7 +152,7 @@ public class PedidoController : ControllerBase
 
             await transaction.CommitAsync();
 
-            return Ok(new { message = "Pedido cadastrado com sucesso!" });
+            return Ok(new { success = true, message = "Pedido cadastrado com sucesso!" });
         }
         catch (Exception ex)
         {
@@ -155,6 +161,7 @@ public class PedidoController : ControllerBase
             return StatusCode(500, new { message = "Ocorreu um erro ao cadastrar o pedido.", error = ex.Message });
         }
     }
+
 
     [HttpGet("listar")]
     public async Task<IActionResult> ListarPedidos()
