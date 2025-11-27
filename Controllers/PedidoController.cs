@@ -23,7 +23,6 @@ public class PedidoController : ControllerBase
         _dbEsgotado = dbEsgotado;
     }
 
-
     //[HttpGet("db-esgotado")]
     //public IActionResult TesteDbEsgotado()
     //{
@@ -76,7 +75,6 @@ public class PedidoController : ControllerBase
                     };
 
                     _context.Cliente.Add(cliente);
-                    Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
                     await _context.SaveChangesAsync();
                 }
             }

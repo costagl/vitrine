@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using NuGet.Common;
 using System.Text;
 using System.Text.Json.Serialization;
 using VitrineApi.Data;
@@ -14,10 +14,6 @@ using VitrineApi.Services;
 using VitrineApi.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
-
-//Add services to the container.
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -78,15 +74,13 @@ builder.Services.ConfigureApplicationCookie(options =>
     };
 });
 
-
 var allowedOrigin = builder.Configuration["Jwt:Audience"];
-var vercelSite = builder.Configuration["Jwt:Vercel"];
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.WithOrigins(allowedOrigin, vercelSite, "http://localhost:3000")
+        policy.WithOrigins(allowedOrigin)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -97,8 +91,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddDbContext<VitrineDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineDB"))
-           .EnableSensitiveDataLogging()); // DESATIVAR EM PRODUÇÃO
+    options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineDB")));
 
 builder.Services.AddIdentity<LojistaAuth, IdentityRole>(options =>
 {
@@ -115,11 +108,6 @@ builder.Services.AddIdentity<LojistaAuth, IdentityRole>(options =>
     .AddEntityFrameworkStores<VitrineDBContext>()
     .AddDefaultTokenProviders();
 
-//builder.Services.AddControllers()
-//    .AddJsonOptions(options =>
-//    {
-//        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-//    });
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -142,6 +130,11 @@ builder.Services.AddAutoMapper(cfg => {
 });
 
 var app = builder.Build();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -185,7 +178,7 @@ app.Use(async (context, next) =>
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<LojaMiddleware>();
+//app.UseMiddleware<LojaMiddleware>();
 app.UseMiddleware<RateLimiterMiddleware>();
 
 app.MapControllers();

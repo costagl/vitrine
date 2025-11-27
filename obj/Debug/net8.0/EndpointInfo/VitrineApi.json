@@ -241,18 +241,6 @@
         }
       }
     },
-    "/pedido/db-esgotado": {
-      "get": {
-        "tags": [
-          "Pedido"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
     "/pedido/cadastrar": {
       "post": {
         "tags": [

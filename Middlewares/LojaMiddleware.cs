@@ -1,38 +1,37 @@
-﻿using VitrineApi.Interfaces;
+﻿//using VitrineApi.Interfaces;
 
-public class LojaMiddleware
-{
-    private readonly RequestDelegate _next;
+//public class LojaMiddleware
+//{
+//    private readonly RequestDelegate _next;
 
-    public LojaMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
+//    public LojaMiddleware(RequestDelegate next)
+//    {
+//        _next = next;
+//    }
 
-    public async Task InvokeAsync(HttpContext context, ILojaService lojaService)
-    {
-        var host = context.Request.Host.Host;
+//    public async Task InvokeAsync(HttpContext context, ILojaService lojaService)
+//    {
+//        var host = context.Request.Host.Host;
 
-        // Ignora durante testes com ngrok ou localhost
-        if (host.Contains("localhost") || host.Contains("ngrok-free.app"))
-        {
-            await _next(context);
-            return;
-        }
+//        //// Ignora durante testes com ngrok ou localhost
+//        //if (host.Contains("localhost") || host.Contains("ngrok-free.app"))
+//        //{
+//        //    await _next(context);
+//        //    return;
+//        //}
 
-        var subdomain = host.Split('.')[0];
+//        var subdomain = host.Split('.')[0];
 
-        var loja = await lojaService.BuscarPorSubdominio(subdomain);
-        if (loja == null)
-        {
-            context.Response.StatusCode = 404;
-            await context.Response.WriteAsync("Loja não encontrada");
-            return;
-        }
+//        var loja = await lojaService.BuscarPorSubdominio(subdomain);
+//        if (loja == null)
+//        {
+//            context.Response.StatusCode = 404;
+//            await context.Response.WriteAsync("Loja não encontrada");
+//            return;
+//        }
 
-        context.Items["Loja"] = loja;
+//        context.Items["Loja"] = loja;
 
-        await _next(context);
-    }
-
-}
+//        await _next(context);
+//    }
+//}

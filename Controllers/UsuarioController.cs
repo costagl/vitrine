@@ -47,7 +47,7 @@ namespace VitrineApi.Controllers
         [HttpGet("health")]
         public IActionResult ApiHealth()
         {
-            return Ok(new { message = "A API está funcionando!" });
+            return Ok(new { status = "ok", message = "A API está funcionando!" });
         }
 
         private string GenerateJwtToken(IdentityUser user)
