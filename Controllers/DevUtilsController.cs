@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VitrineApi.Data;
 using VitrineApi.Helpers;
 using VitrineApi.Models;
 
 namespace DevUtils
 {
+    
     [ApiController]
+    [AllowAnonymous]
     [Route("[controller]")]
     public class DevUtilsController : Controller
     {

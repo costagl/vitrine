@@ -80,13 +80,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.WithOrigins(allowedOrigin)
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
-        //policy.AllowAnyOrigin() 
+        //policy.WithOrigins(allowedOrigin)
         //      .AllowAnyHeader()
-        //      .AllowAnyMethod();
+        //      .AllowAnyMethod()
+        //      .AllowCredentials();
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
     });
 });
 
