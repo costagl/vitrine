@@ -15,18 +15,31 @@ using VitrineApi.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// =================================================================================
+// 1. CONFIGURAÇÃO DOS SERVIÇOS (DI Container)
+// =================================================================================
+
+// Configuração para o Nginx (Proxy Reverso)
+// Isso é essencial para que o App saiba que está atrás de um proxy e aceite os headers HTTPS
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    // Limpar redes conhecidas é crucial para funcionar em VPS/Docker/Debian onde o IP interno muda
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 // Configuração de CORS
-var allowedOrigin = builder.Configuration["Jwt:Audience"]; // O domínio do front-end
+var allowedOrigin = builder.Configuration["Jwt:Audience"];
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        // Política CORS restrita ao domínio do front-end
-        policy.WithOrigins(allowedOrigin) // Permite apenas o domínio configurado no appsettings.json
-              .AllowAnyHeader()            // Permite qualquer cabeçalho
-              .AllowAnyMethod()            // Permite qualquer método HTTP
-              .AllowCredentials();         // Permite enviar cookies, caso necessário
+        policy.WithOrigins(allowedOrigin)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -50,8 +63,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             OnMessageReceived = context =>
             {
                 var token = context.Request.Headers["Authorization"].ToString();
-                token = token.Replace("\\", "").Replace("\"", "");
-                context.Request.Headers["Authorization"] = token;
+                if (!string.IsNullOrEmpty(token))
+                {
+                    token = token.Replace("\\", "").Replace("\"", "");
+                    context.Request.Headers["Authorization"] = token;
+                }
                 return Task.CompletedTask;
             },
             OnChallenge = context =>
@@ -63,9 +79,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             }
         };
     })
-    .AddCookie();
+    .AddCookie(); // Se você não usa Cookies no front (só JWT), isso pode ser opcional, mas mantive.
 
-// Configuração de cookies de autenticação
+// Configuração de cookies de Identity (caso use Identity padrão)
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
@@ -136,29 +152,14 @@ builder.Services.AddAutoMapper(cfg => {
 
 var app = builder.Build();
 
-// Middleware para encaminhamento de cabeçalhos
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-});
+// =================================================================================
+// 2. PIPELINE DE MIDDLEWARES (A ORDEM AQUI É CRÍTICA)
+// =================================================================================
 
-// Configuração do pipeline de requisições
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// 1. Processar headers do Nginx (Deve ser o primeiro)
+app.UseForwardedHeaders();
 
-// Aplicando o CORS antes de qualquer outro middleware
-app.UseCors("CorsPolicy");
-
-app.UseHttpsRedirection();
-
-// Middleware de autenticação e autorização
-app.UseAuthentication();
-app.UseAuthorization();
-
-// Middleware de erro global
+// 2. Tratamento Global de Erros (Try/Catch ao redor de tudo)
 app.Use(async (context, next) =>
 {
     try
@@ -167,17 +168,43 @@ app.Use(async (context, next) =>
     }
     catch (Exception ex)
     {
+        // Log o erro aqui (Console.WriteLine ou ILogger)
+        Console.WriteLine($"Erro Interno: {ex.Message}");
+
         context.Response.StatusCode = 500;
         context.Response.ContentType = "application/json";
-        await context.Response.WriteAsync($"{{\"erro\":\"{ex.Message}\"}}");
+
+        // Em produção, evite mostrar o ex.Message real para não vazar dados do banco.
+        var mensagemErro = app.Environment.IsDevelopment() ? ex.Message : "Ocorreu um erro interno no servidor.";
+        await context.Response.WriteAsync($"{{\"erro\":\"{mensagemErro}\"}}");
     }
 });
 
+// 3. Swagger (Apenas desenvolvimento)
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+// 4. Redirecionamento HTTPS
+// (O Nginx já cuida disso, mas mantemos para segurança interna)
+app.UseHttpsRedirection();
+
+// 5. Roteamento (Descobrir qual Controller chamar)
 app.UseRouting();
 
-// Aplicação do middleware de RateLimiter
+// 6. CORS (Deve vir APÓS UseRouting e ANTES de Auth)
+app.UseCors("CorsPolicy");
+
+// 7. Autenticação e Autorização
+app.UseAuthentication();
+app.UseAuthorization();
+
+// 8. Rate Limiter (Seu middleware customizado)
 app.UseMiddleware<RateLimiterMiddleware>();
 
+// 9. Mapeamento dos Endpoints
 app.MapControllers();
 
 app.Run();
