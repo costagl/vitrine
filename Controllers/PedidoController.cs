@@ -25,7 +25,6 @@ public class PedidoController : ControllerBase
     [HttpPost("cadastrar")]
     public async Task<IActionResult> CadastrarPedido([FromBody] ClienteEnderecoPedidoVM model)
     {
-
         if (_dbEsgotado.VerificarBancoEsgotado())
         {
             return StatusCode(500, new { message = "Banco de dados esgotado." });
@@ -36,18 +35,19 @@ public class PedidoController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        // Removido caracteres não numéricos do CPF
+        // Limpeza do CPF
         model.Cpf = new string(model.Cpf.Where(char.IsDigit).ToArray());
 
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
+            // -----------------------------------------------------------
+            // 1. LÓGICA DE CLIENTE (Permanece igual)
+            // -----------------------------------------------------------
             Cliente cliente = null;
-
             try
             {
-                cliente = await _context.Cliente
-                    .FirstOrDefaultAsync(c => c.Cpf == model.Cpf);
+                cliente = await _context.Cliente.FirstOrDefaultAsync(c => c.Cpf == model.Cpf);
 
                 if (cliente == null)
                 {
@@ -59,7 +59,6 @@ public class PedidoController : ControllerBase
                         Telefone = model.Telefone,
                         DataCriacao = DateTime.UtcNow
                     };
-
                     _context.Cliente.Add(cliente);
                     await _context.SaveChangesAsync();
                 }
@@ -69,12 +68,13 @@ public class PedidoController : ControllerBase
                 return StatusCode(500, new { message = "Erro ao verificar ou criar cliente.", error = ex.Message });
             }
 
+            // -----------------------------------------------------------
+            // 2. LÓGICA DE ENDEREÇO (Permanece igual)
+            // -----------------------------------------------------------
             EnderecoEntrega enderecoEntrega = null;
             try
             {
-                // Aqui acessamos diretamente o objeto `EnderecoEntrega` (não mais um array)
                 var endereco = model.EnderecoEntrega;
-
                 if (endereco != null)
                 {
                     enderecoEntrega = await _context.EnderecoEntrega
@@ -95,9 +95,8 @@ public class PedidoController : ControllerBase
                             Estado = endereco.Estado,
                             Cep = endereco.Cep
                         };
-
                         _context.EnderecoEntrega.Add(enderecoEntrega);
-                        await _context.SaveChangesAsync(); // Salvando o endereço
+                        await _context.SaveChangesAsync();
                     }
                 }
             }
@@ -106,16 +105,28 @@ public class PedidoController : ControllerBase
                 return StatusCode(500, new { message = "Erro ao verificar ou criar o endereço de entrega.", error = ex.Message });
             }
 
-            if (model.Pedidos[0].IdLoja == 0)
+            // -----------------------------------------------------------
+            // 3. LÓGICA DE PEDIDOS E ITENS (AQUI MUDOU TUDO)
+            // -----------------------------------------------------------
+
+            // Verifica se há pedidos na lista principal
+            if (model.Pedidos == null || !model.Pedidos.Any())
             {
-                return StatusCode(500, new { message = "Erro ao verificar ou criar pedido" });
+                return BadRequest(new { message = "Nenhum pedido informado." });
             }
 
             foreach (var pedido in model.Pedidos)
             {
                 try
                 {
-                    decimal valorTotalItens = model.ItensPedido.Sum(item => item.Quantidade * item.PrecoUnitario);
+                    // VALIDACAO: Verifica se ESTE pedido tem itens dentro dele
+                    if (pedido.ItensPedido == null || !pedido.ItensPedido.Any())
+                    {
+                        return BadRequest(new { message = $"O pedido da loja {pedido.IdLoja} não contém itens." });
+                    }
+
+                    // CÁLCULO: Agora somamos os itens DESTE pedido específico
+                    decimal valorTotalItens = pedido.ItensPedido.Sum(item => item.Quantidade * item.PrecoUnitario);
                     decimal valorTotal = valorTotalItens + pedido.FreteValor;
 
                     int idEnderecoEntrega = enderecoEntrega?.Id ?? 0;
@@ -135,45 +146,47 @@ public class PedidoController : ControllerBase
                     };
 
                     _context.Pedido.Add(pedidoEntity);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(); // Precisa salvar para gerar o ID do Pedido
 
-                    foreach (var item in model.ItensPedido)
+                    // LOOP DOS ITENS: Agora iteramos sobre a lista interna do pedido
+                    foreach (var item in pedido.ItensPedido)
                     {
                         try
                         {
                             var itemPedido = new ItensPedido
                             {
-                                IdPedido = pedidoEntity.Id,
+                                IdPedido = pedidoEntity.Id, // ID gerado acima
                                 IdProduto = item.IdProduto,
                                 Quantidade = item.Quantidade,
                                 PrecoUnitario = item.PrecoUnitario,
-                                PrecoTotal = item.PrecoTotal
+                                PrecoTotal = item.PrecoTotal // Ou recalcule: item.Quantidade * item.PrecoUnitario
                             };
 
                             _context.ItensPedido.Add(itemPedido);
                         }
                         catch (Exception ex)
                         {
-                            return StatusCode(500, new { message = "Erro ao adicionar itens ao pedido.", error = ex.Message });
+                            // Rollback será feito pelo catch externo
+                            throw new Exception($"Erro ao adicionar item {item.Titulo}: {ex.Message}");
                         }
                     }
+
+                    // Salva os itens deste pedido
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
-                    return StatusCode(500, new { message = "Erro ao criar pedido.", error = ex.Message });
+                    return StatusCode(500, new { message = "Erro ao processar um dos pedidos.", error = ex.Message });
                 }
             }
 
             await transaction.CommitAsync();
-
             return Ok(new { success = true, message = "Pedido cadastrado com sucesso!" });
         }
         catch (Exception ex)
         {
             await transaction.RollbackAsync();
-
-            return StatusCode(500, new { message = "Ocorreu um erro ao cadastrar o pedido.", error = ex.Message });
+            return StatusCode(500, new { message = "Ocorreu um erro fatal ao cadastrar o pedido.", error = ex.Message });
         }
     }
 

@@ -1322,6 +1322,9 @@
         "additionalProperties": false
       },
       "PedidoVM": {
+        "required": [
+          "itensPedido"
+        ],
         "type": "object",
         "properties": {
           "idPedido": {
@@ -1353,11 +1356,11 @@
             "format": "double"
           },
           "itensPedido": {
+            "minItems": 1,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ItensPedidoVM"
-            },
-            "nullable": true
+            }
           }
         },
         "additionalProperties": false

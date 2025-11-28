@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using VitrineApi.Enums;
 
 public class ClienteEnderecoPedidoVM
@@ -18,7 +19,7 @@ public class ClienteEnderecoPedidoVM
     public List<PedidoVM> Pedidos { get; set; }
 
     // Propriedades de ItensPedido
-    public List<ItensPedidoVM> ItensPedido { get; set; }
+    public List<ItensPedidoVM>? ItensPedido { get; set; }
 }
 
 public class EnderecoEntregaVM
@@ -39,10 +40,12 @@ public class PedidoVM
     public int IdLoja { get; set; }
     public int IdEnderecoEntrega { get; set; }
     public DateTime DataPedido { get; set; }
-    public string Status { get; set; }
+    public string? Status { get; set; }
     public decimal ValorTotal { get; set; }
     public decimal FreteValor { get; set; }
 
+    [Required(ErrorMessage = "A lista de itens não pode ser nula.")]
+    [MinLength(1, ErrorMessage = "O pedido deve conter pelo menos um item.")]
     public List<ItensPedidoVM> ItensPedido { get; set; }
 }
 
