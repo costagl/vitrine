@@ -79,9 +79,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             }
         };
     })
-    .AddCookie(); // Se você não usa Cookies no front (só JWT), isso pode ser opcional, mas mantive.
+    .AddCookie();
 
-// Configuração de cookies de Identity (caso use Identity padrão)
+// Configuração de cookies de Identity
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
