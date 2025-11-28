@@ -89,24 +89,31 @@ public class ProdutoController : ControllerBase
         return Ok(new { message = "Produto cadastrado com sucesso!", produto = produtoRequest });
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [HttpGet("listar")]
-    public async Task<IActionResult> Listar()
+    [AllowAnonymous]
+    [HttpGet("listar/{idLoja}")]
+    public async Task<IActionResult> Listar(int idLoja)
     {
-        var user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+        // 1. Validação básica do ID
+        if (idLoja <= 0)
+        {
+            return BadRequest(new { message = "ID da loja inválido." });
+        }
 
-        if (user == null)
-            return NotFound(new { message = "Usuário não encontrado." });
+        // 2. Chamada direta ao serviço usando o ID da Loja
+        // Nota: Você precisará garantir que seu _produtoService tenha um método que aceite 'int'
+        var produtosDto = await _produtoService.ObterProdutosPorLojaAsync(idLoja);
 
-        var produtosDto = await _produtoService.ObterProdutosPorLojaAsync(user.Cpf_Cnpj);
-
+        // 3. Retorno
         if (produtosDto == null || !produtosDto.Any())
-            return Ok(new { message = "Nenhum produto encontrado.", produtosDto });
+        {
+            // Retorna uma lista vazia junto com a mensagem para não quebrar o front-end
+            return Ok(new { message = "Nenhum produto encontrado.", data = new List<object>() });
+        }
 
         return Ok(produtosDto);
     }
 
-    [HttpGet("listar/{id}")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> Buscar(int id)
     {
         var produtoData = await _produtoService.ObterDetalhesProdutoAsync(id);

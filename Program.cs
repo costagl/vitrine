@@ -75,7 +75,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 context.HandleResponse();
                 context.Response.StatusCode = 401;
                 context.Response.ContentType = "application/json";
-                return context.Response.WriteAsync("{\"erro\":\"Token inválido ou ausente\"}");
+                return context.Response.WriteAsync("{\"erro\":\"Por favor, faça login novamente.\"}");
             }
         };
     })

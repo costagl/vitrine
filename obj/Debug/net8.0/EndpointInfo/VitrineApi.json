@@ -426,10 +426,21 @@
         }
       }
     },
-    "/produto/listar": {
+    "/produto/listar/{idLoja}": {
       "get": {
         "tags": [
           "Produto"
+        ],
+        "parameters": [
+          {
+            "name": "idLoja",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -438,7 +449,7 @@
         }
       }
     },
-    "/produto/listar/{id}": {
+    "/produto/{id}": {
       "get": {
         "tags": [
           "Produto"

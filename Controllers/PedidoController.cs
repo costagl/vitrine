@@ -42,7 +42,7 @@ public class PedidoController : ControllerBase
         try
         {
             // -----------------------------------------------------------
-            // 1. LÓGICA DE CLIENTE (Permanece igual)
+            // 1. LÓGICA DE CLIENTE
             // -----------------------------------------------------------
             Cliente cliente = null;
             try
@@ -69,7 +69,7 @@ public class PedidoController : ControllerBase
             }
 
             // -----------------------------------------------------------
-            // 2. LÓGICA DE ENDEREÇO (Permanece igual)
+            // 2. LÓGICA DE ENDEREÇO
             // -----------------------------------------------------------
             EnderecoEntrega enderecoEntrega = null;
             try
@@ -106,10 +106,9 @@ public class PedidoController : ControllerBase
             }
 
             // -----------------------------------------------------------
-            // 3. LÓGICA DE PEDIDOS E ITENS (AQUI MUDOU TUDO)
+            // 3. LÓGICA DE PEDIDOS E ITENS (COM BAIXA DE ESTOQUE)
             // -----------------------------------------------------------
 
-            // Verifica se há pedidos na lista principal
             if (model.Pedidos == null || !model.Pedidos.Any())
             {
                 return BadRequest(new { message = "Nenhum pedido informado." });
@@ -119,13 +118,11 @@ public class PedidoController : ControllerBase
             {
                 try
                 {
-                    // VALIDACAO: Verifica se ESTE pedido tem itens dentro dele
                     if (pedido.ItensPedido == null || !pedido.ItensPedido.Any())
                     {
                         return BadRequest(new { message = $"O pedido da loja {pedido.IdLoja} não contém itens." });
                     }
 
-                    // CÁLCULO: Agora somamos os itens DESTE pedido específico
                     decimal valorTotalItens = pedido.ItensPedido.Sum(item => item.Quantidade * item.PrecoUnitario);
                     decimal valorTotal = valorTotalItens + pedido.FreteValor;
 
@@ -146,37 +143,62 @@ public class PedidoController : ControllerBase
                     };
 
                     _context.Pedido.Add(pedidoEntity);
-                    await _context.SaveChangesAsync(); // Precisa salvar para gerar o ID do Pedido
+                    await _context.SaveChangesAsync(); // Gera o ID do Pedido
 
-                    // LOOP DOS ITENS: Agora iteramos sobre a lista interna do pedido
+                    // LOOP DOS ITENS
                     foreach (var item in pedido.ItensPedido)
                     {
                         try
                         {
+                            // --- NOVA LÓGICA DE ESTOQUE ---
+
+                            // 1. Busca o produto no banco
+                            var produtoDb = await _context.Produto.FindAsync(item.IdProduto);
+
+                            if (produtoDb == null)
+                            {
+                                throw new Exception($"Produto ID {item.IdProduto} não encontrado.");
+                            }
+
+                            // 2. Verifica se tem estoque suficiente
+                            if (produtoDb.Estoque < item.Quantidade)
+                            {
+                                throw new Exception($"Estoque insuficiente para o produto '{produtoDb.Titulo}'. Estoque atual: {produtoDb.Estoque}. Solicitado: {item.Quantidade}.");
+                            }
+
+                            // 3. Subtrai a quantidade
+                            produtoDb.Estoque -= item.Quantidade;
+
+                            // Marca o produto como modificado para o EF Core saber que precisa dar Update
+                            _context.Produto.Update(produtoDb);
+
+                            // ------------------------------
+
                             var itemPedido = new ItensPedido
                             {
-                                IdPedido = pedidoEntity.Id, // ID gerado acima
+                                IdPedido = pedidoEntity.Id,
                                 IdProduto = item.IdProduto,
                                 Quantidade = item.Quantidade,
                                 PrecoUnitario = item.PrecoUnitario,
-                                PrecoTotal = item.PrecoTotal // Ou recalcule: item.Quantidade * item.PrecoUnitario
+                                PrecoTotal = item.PrecoTotal
                             };
 
                             _context.ItensPedido.Add(itemPedido);
                         }
                         catch (Exception ex)
                         {
-                            // Rollback será feito pelo catch externo
-                            throw new Exception($"Erro ao adicionar item {item.Titulo}: {ex.Message}");
+                            // Lança a exceção para que o rollback externo capture e desfaça tudo
+                            throw new Exception($"Erro ao processar item {item.Titulo}: {ex.Message}");
                         }
                     }
 
-                    // Salva os itens deste pedido
+                    // Salva os itens do pedido e as atualizações de estoque (Produto)
                     await _context.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
-                    return StatusCode(500, new { message = "Erro ao processar um dos pedidos.", error = ex.Message });
+                    // Repassa o erro para o catch principal fazer o Rollback
+                    throw;
                 }
             }
 
@@ -186,6 +208,7 @@ public class PedidoController : ControllerBase
         catch (Exception ex)
         {
             await transaction.RollbackAsync();
+            // Logar erro ex...
             return StatusCode(500, new { message = "Ocorreu um erro fatal ao cadastrar o pedido.", error = ex.Message });
         }
     }

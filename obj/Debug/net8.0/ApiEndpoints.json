@@ -231,6 +231,22 @@
   },
   {
     "ContainingType": "ProdutoController",
+    "Method": "Buscar",
+    "RelativePath": "produto/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProdutoController",
     "Method": "Alterar",
     "RelativePath": "produto/alterar/{id}",
     "HttpMethod": "PUT",
@@ -295,23 +311,13 @@
   {
     "ContainingType": "ProdutoController",
     "Method": "Listar",
-    "RelativePath": "produto/listar",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ProdutoController",
-    "Method": "Buscar",
-    "RelativePath": "produto/listar/{id}",
+    "RelativePath": "produto/listar/{idLoja}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "idLoja",
         "Type": "System.Int32",
         "IsRequired": true
       }

@@ -18,24 +18,22 @@ namespace VitrineApi.Services
             _context = context;
         }
 
-        public async Task<List<ProdutoDTO>> ObterProdutosPorLojaAsync(string cpfCnpj)
+        public async Task<List<ProdutoDTO>> ObterProdutosPorLojaAsync(int idLoja)
         {
-            var loja = await _context.Loja
-                .Where(l => l.Cpf_Cnpj == cpfCnpj)
-                .FirstOrDefaultAsync();
+            // Não precisamos mais buscar a Loja antes, pois já temos o ID
+            // Se quiser validar se a loja existe, pode fazer, mas a query abaixo 
+            // simplesmente retornará vazio se o ID não existir, o que é performático.
 
-            if (loja == null)
-                return null; // Retorna null se a loja não for encontrada
-
-            // Retorna os produtos diretamente mapeados para ProdutoDTO
             var produtosData = await _context.Produto
-                .Where(p => p.IdLoja == loja.Id)
+                .Where(p => p.IdLoja == idLoja) // Filtro direto pelo parâmetro
                 .Join(
                     _context.CategoriaProduto,
                     produto => produto.IdCategoriaProduto,
                     categoria => categoria.Id,
                     (produto, categoria) => new { produto, categoria }
                 )
+                // Mantemos o Join com Loja aqui para poder pegar o IdCategoria da loja
+                // e consequentemente o Nome da Categoria da Loja
                 .Join(
                     _context.Loja,
                     produtoCategoria => produtoCategoria.produto.IdLoja,
@@ -53,7 +51,7 @@ namespace VitrineApi.Services
                         IdLoja = produtoLoja.produto.IdLoja,
                         ValorUnitario = produtoLoja.produto.ValorUnitario,
                         ValorPromocional = produtoLoja.produto.ValorPromocional,
-                        Estoque = produtoLoja.produto.Estoque,
+                        Estoque = produtoLoja.produto.Estoque, // Confirme se no banco é 'Estoque' ou 'Quantidade'
                         Sku = produtoLoja.produto.Sku,
                         Imagem = produtoLoja.produto.ImagemUrl,
                         Ativo = produtoLoja.produto.Ativo,
