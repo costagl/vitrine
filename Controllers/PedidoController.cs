@@ -6,7 +6,6 @@ using VitrineApi.Interfaces;
 using VitrineApi.Models;
 using VitrineApi.ViewModels;
 using VitrineApi.Helpers;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 [ApiController]
 [Route("/pedido")]
