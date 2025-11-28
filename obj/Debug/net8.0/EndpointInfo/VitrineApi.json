@@ -272,10 +272,21 @@
         }
       }
     },
-    "/pedido/listar": {
+    "/pedido/listar/{idLoja}": {
       "get": {
         "tags": [
           "Pedido"
+        ],
+        "parameters": [
+          {
+            "name": "idLoja",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -284,7 +295,7 @@
         }
       }
     },
-    "/pedido/listar/{id}": {
+    "/pedido/pedido/{id}": {
       "get": {
         "tags": [
           "Pedido"
@@ -796,7 +807,7 @@
             "type": "string",
             "nullable": true
           },
-          "criadoEm": {
+          "dataCriacao": {
             "type": "string",
             "format": "date-time"
           },
@@ -1014,6 +1025,10 @@
           "idProduto": {
             "type": "integer",
             "format": "int32"
+          },
+          "titulo": {
+            "type": "string",
+            "nullable": true
           },
           "quantidade": {
             "type": "integer",
@@ -1245,7 +1260,9 @@
             "format": "date-time"
           },
           "status": {
-            "$ref": "#/components/schemas/StatusPedido"
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string"
           },
           "valorTotal": {
             "type": "number",
@@ -1324,7 +1341,8 @@
             "format": "date-time"
           },
           "status": {
-            "$ref": "#/components/schemas/StatusPedido"
+            "type": "string",
+            "nullable": true
           },
           "valorTotal": {
             "type": "number",
@@ -1333,6 +1351,13 @@
           "freteValor": {
             "type": "number",
             "format": "double"
+          },
+          "itensPedido": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItensPedidoVM"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -1553,17 +1578,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "StatusPedido": {
-        "enum": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ],
-        "type": "integer",
-        "format": "int32"
       },
       "Tema": {
         "required": [

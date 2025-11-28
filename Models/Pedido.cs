@@ -31,7 +31,7 @@ public partial class Pedido
     [Required]
     [StringLength(30)]
     [Unicode(false)]
-    public StatusPedido Status { get; set; }
+    public string Status { get; set; }
 
     [Column(TypeName = "decimal(18, 4)")]
     public decimal ValorTotal { get; set; }

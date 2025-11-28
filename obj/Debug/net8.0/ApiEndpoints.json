@@ -184,17 +184,23 @@
   {
     "ContainingType": "PedidoController",
     "Method": "ListarPedidos",
-    "RelativePath": "pedido/listar",
+    "RelativePath": "pedido/listar/{idLoja}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "idLoja",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
     "ContainingType": "PedidoController",
     "Method": "ObterPedidoPorId",
-    "RelativePath": "pedido/listar/{id}",
+    "RelativePath": "pedido/pedido/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

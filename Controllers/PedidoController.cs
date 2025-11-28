@@ -23,20 +23,7 @@ public class PedidoController : ControllerBase
         _dbEsgotado = dbEsgotado;
     }
 
-    //[HttpGet("db-esgotado")]
-    //public IActionResult TesteDbEsgotado()
-    //{
-    //    if (_dbEsgotado.VerificarBancoEsgotado())
-    //    {
-    //        return Ok(new { message = "Banco de dados esgotado." });
-    //    }
-    //    else
-    //    {
-    //        return Ok(new { message = "Ainda há armazenamento no banco de dados." });
-    //    }
-    //}
-
-        [HttpPost("cadastrar")]
+    [HttpPost("cadastrar")]
     public async Task<IActionResult> CadastrarPedido([FromBody] ClienteEnderecoPedidoVM model)
     {
 
@@ -143,7 +130,7 @@ public class PedidoController : ControllerBase
                         IdLoja = pedido.IdLoja,
                         IdEnderecoEntrega = idEnderecoEntrega,
                         DataPedido = horaBrasilia,
-                        Status = StatusPedido.Pendente,
+                        Status = "Pendente",
                         ValorTotal = valorTotal,
                         FreteValor = pedido.FreteValor,
                     };
@@ -192,14 +179,94 @@ public class PedidoController : ControllerBase
     }
 
 
-    [HttpGet("listar")]
-    public async Task<IActionResult> ListarPedidos()
+    [HttpGet("listar/{idLoja}")]
+    public async Task<IActionResult> ListarPedidos(int idLoja)
     {
-        var pedidos = await _pedidoRepository.ListarAsync();
-        return Ok(pedidos);
+        // 1. O JOIN inicial (Mantido igual)
+        var pedidosPorCliente = _context.Pedido
+            .Where(p => p.IdLoja == idLoja)
+            .Join(_context.Cliente,
+                  pedido => pedido.CpfCliente,
+                  cliente => cliente.Cpf,
+                  (pedido, cliente) => new { Pedido = pedido, Cliente = cliente })
+            .Join(_context.EnderecoEntrega,
+                  joined => joined.Pedido.IdEnderecoEntrega,
+                  endereco => endereco.Id,
+                  (joined, endereco) => new { joined.Pedido, joined.Cliente, Endereco = endereco })
+            .ToList();
+
+        // 2. Agrupa por Cliente
+        var pedidosVM = pedidosPorCliente
+            .GroupBy(x => x.Cliente.Cpf)
+            .Select(clienteGroup =>
+            {
+                var cliente = clienteGroup.First().Cliente;
+
+                // 3. Agrupa por Pedido
+                var pedidosDoCliente = clienteGroup
+                    .GroupBy(x => x.Pedido.Id)
+                    .Select(pedidoGroup =>
+                    {
+                        var pedido = pedidoGroup.First().Pedido;
+
+                        // 4. ATENÇÃO: Alteração aqui para buscar o Título do Produto
+                        var itensDoPedido = _context.ItensPedido
+                            .Where(ip => ip.IdPedido == pedido.Id)
+                            // FAZ O JOIN COM A TABELA DE PRODUTOS
+                            .Join(_context.Produto,
+                                  item => item.IdProduto, // Chave em ItensPedido
+                                  prod => prod.Id,        // Chave em Produto (Estou assumindo que é 'Id')
+                                  (item, prod) => new { Item = item, Prod = prod }) // Seleciona os dois objetos
+                            .Select(joined => new ItensPedidoVM
+                            {
+                                IdProduto = joined.Item.IdProduto,
+                                Titulo = joined.Prod.Titulo, // <--- Preenche o Título vindo da tabela Produto
+                                Quantidade = joined.Item.Quantidade,
+                                PrecoUnitario = joined.Item.PrecoUnitario,
+                                PrecoTotal = joined.Item.PrecoTotal
+                            }).ToList();
+
+                        return new PedidoVM
+                        {
+                            idPedido = pedido.Id,
+                            IdLoja = pedido.IdLoja,
+                            IdEnderecoEntrega = pedido.IdEnderecoEntrega,
+                            DataPedido = pedido.DataPedido,
+                            Status = pedido.Status,
+                            ValorTotal = pedido.ValorTotal,
+                            FreteValor = pedido.FreteValor,
+                            ItensPedido = itensDoPedido // Lista correta aninhada com Títulos
+                        };
+                    }).ToList();
+
+                // 6. Constrói o ClienteEnderecoPedidoVM FINAL
+                return new ClienteEnderecoPedidoVM
+                {
+                    Cpf = cliente.Cpf,
+                    NomeCompleto = cliente.NomeCompleto,
+                    Email = cliente.Email,
+                    Telefone = cliente.Telefone,
+                    DataCriacao = cliente.DataCriacao, // Ajustei para DataCriacao conforme seu JSON anterior
+                    EnderecoEntrega = new EnderecoEntregaVM
+                    {
+                        EnderecoEntregaId = clienteGroup.First().Endereco.Id,
+                        Logradouro = clienteGroup.First().Endereco.Logradouro,
+                        Numero = clienteGroup.First().Endereco.Numero,
+                        Complemento = clienteGroup.First().Endereco.Complemento,
+                        Bairro = clienteGroup.First().Endereco.Bairro,
+                        Cidade = clienteGroup.First().Endereco.Cidade,
+                        Estado = clienteGroup.First().Endereco.Estado,
+                        Cep = clienteGroup.First().Endereco.Cep
+                    },
+                    Pedidos = pedidosDoCliente
+                };
+            })
+            .ToList();
+
+        return Ok(pedidosVM);
     }
 
-    [HttpGet("listar/{id}")]
+    [HttpGet("pedido/{id}")]
     public async Task<IActionResult> ObterPedidoPorId(int id)
     {
         var pedido = await _pedidoRepository.BuscarPorIdAsync(id);

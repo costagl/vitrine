@@ -42,6 +42,7 @@ public class RepositoryBase<T> : IRepositoryBase<T>, IDisposable where T : class
         if (filtro != null)
             return await _dbSet.Where(filtro).ToListAsync();
 
+        Console.WriteLine("");
         return await _dbSet.ToListAsync();
     }
 
