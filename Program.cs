@@ -15,6 +15,22 @@ using VitrineApi.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuração de CORS
+var allowedOrigin = builder.Configuration["Jwt:Audience"]; // O domínio do front-end
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        // Política CORS restrita ao domínio do front-end
+        policy.WithOrigins(allowedOrigin) // Permite apenas o domínio configurado no appsettings.json
+              .AllowAnyHeader()            // Permite qualquer cabeçalho
+              .AllowAnyMethod()            // Permite qualquer método HTTP
+              .AllowCredentials();         // Permite enviar cookies, caso necessário
+    });
+});
+
+// Configuração de autenticação JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -49,6 +65,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     })
     .AddCookie();
 
+// Configuração de cookies de autenticação
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
@@ -61,7 +78,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     {
         context.Response.StatusCode = 401;
         context.Response.ContentType = "application/json";
-
         return context.Response.WriteAsync("{\"erro\":\"Não autorizado - login requerido\"}");
     };
 
@@ -69,30 +85,15 @@ builder.Services.ConfigureApplicationCookie(options =>
     {
         context.Response.StatusCode = 403;
         context.Response.ContentType = "application/json";
-
         return context.Response.WriteAsync("{\"erro\":\"Acesso negado\"}");
     };
 });
 
-var allowedOrigin = builder.Configuration["Jwt:Audience"];
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy", policy =>
-    {
-        //policy.WithOrigins(allowedOrigin)
-        //      .AllowAnyHeader()
-        //      .AllowAnyMethod()
-        //      .AllowCredentials();
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
-
+// Configuração do DbContext
 builder.Services.AddDbContext<VitrineDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("VitrineDB")));
 
+// Configuração do Identity
 builder.Services.AddIdentity<LojistaAuth, IdentityRole>(options =>
 {
     options.Password.RequireNonAlphanumeric = false;
@@ -108,15 +109,18 @@ builder.Services.AddIdentity<LojistaAuth, IdentityRole>(options =>
     .AddEntityFrameworkStores<VitrineDBContext>()
     .AddDefaultTokenProviders();
 
+// Adicionar Controllers e configurar JSON
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
+// Adicionar Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Injeção de dependência
 builder.Services.AddScoped<DbEsgotado>();
 builder.Services.AddScoped<ILojaService, LojaService>();
 builder.Services.AddScoped<ProdutoService>();
@@ -125,31 +129,36 @@ builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 builder.Services.AddScoped<RepositoryBase<Lojista>>();
 builder.Services.AddScoped<RepositoryBase<Loja>>();
 
+// AutoMapper
 builder.Services.AddAutoMapper(cfg => {
     cfg.AddProfile<MappingProfile>();
 });
 
 var app = builder.Build();
 
+// Middleware para encaminhamento de cabeçalhos
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 
-// Configure the HTTP request pipeline.
+// Configuração do pipeline de requisições
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// Aplicando o CORS antes de qualquer outro middleware
 app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 
-app.UseRouting();
+// Middleware de autenticação e autorização
+app.UseAuthentication();
+app.UseAuthorization();
 
-
+// Middleware de erro global
 app.Use(async (context, next) =>
 {
     try
@@ -164,21 +173,9 @@ app.Use(async (context, next) =>
     }
 });
 
-app.Use(async (context, next) =>
-{
-    await next();
+app.UseRouting();
 
-    if (context.Response.StatusCode == 401 && !context.Response.HasStarted)
-    {
-        context.Response.ContentType = "application/json";
-        await context.Response.WriteAsync("{\"erro\":\"Não autorizado\"}");
-    }
-});
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-//app.UseMiddleware<LojaMiddleware>();
+// Aplicação do middleware de RateLimiter
 app.UseMiddleware<RateLimiterMiddleware>();
 
 app.MapControllers();
