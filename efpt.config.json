@@ -32,6 +32,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[EnderecoLojista]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[ItensPedido]",
          "ObjectType": 0
       },

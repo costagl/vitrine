@@ -23,6 +23,8 @@ public partial class VitrineDBContext : IdentityDbContext<LojistaAuth>
 
     public virtual DbSet<EnderecoEntrega> EnderecoEntrega { get; set; }
 
+    public virtual DbSet<EnderecoLojista> EnderecoLojista { get; set; }
+
     public virtual DbSet<ItensPedido> ItensPedido { get; set; }
 
     public virtual DbSet<Layout> Layout { get; set; }
@@ -59,6 +61,13 @@ public partial class VitrineDBContext : IdentityDbContext<LojistaAuth>
             entity.HasOne(d => d.CpfClienteNavigation).WithMany(p => p.EnderecoEntrega)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EnderecoEntrega_Cliente1");
+        });
+
+        modelBuilder.Entity<EnderecoLojista>(entity =>
+        {
+            entity.HasOne(d => d.Cpf_CnpjLojistaNavigation).WithMany(p => p.EnderecoLojista)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_EnderecoLojista_Lojista");
         });
 
         modelBuilder.Entity<ItensPedido>(entity =>

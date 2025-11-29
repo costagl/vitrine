@@ -291,9 +291,6 @@ C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\Vitri
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.sourcelink.json
-C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.dll
-C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\refint\VitrineApi.dll
-C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.pdb
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\bin\Debug\net8.0\appsettings.json
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\bin\Debug\net8.0\efpt.config.json
@@ -564,5 +561,8 @@ C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\Vitri
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.csproj.Up2Date
+C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.dll
+C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\refint\VitrineApi.dll
+C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.pdb
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\VitrineApi.genruntimeconfig.cache
 C:\Users\Gabriel\Documents\principal\estudo\faculdade\projetos\projeto_tcc\VitrineApi\VitrineApi\obj\Debug\net8.0\ref\VitrineApi.dll

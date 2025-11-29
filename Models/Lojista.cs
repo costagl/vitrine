@@ -30,6 +30,9 @@ public partial class Lojista
     [Unicode(false)]
     public string Telefone { get; set; }
 
+    [InverseProperty("Cpf_CnpjLojistaNavigation")]
+    public virtual ICollection<EnderecoLojista> EnderecoLojista { get; set; } = new List<EnderecoLojista>();
+
     [InverseProperty("Cpf_CnpjNavigation")]
     public virtual ICollection<Loja> Loja { get; set; } = new List<Loja>();
 }

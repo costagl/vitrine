@@ -176,14 +176,32 @@ public class ProdutoController : ControllerBase
         return Ok(produto);
     }
 
-    [HttpDelete("excluir/{id}")]
+    [HttpDelete("remover/{id}")]
     public async Task<IActionResult> Remover(int id)
     {
-        var produto = await _produtoRepo.BuscarPorIdAsync(id);
+        // 1. Verifica se o produto existe
+        var produto = await _context.Produto.FindAsync(id); // ou seu _produtoRepo.BuscarPorIdAsync(id)
         if (produto == null)
-            return NotFound("Produto não encontrado.");
+            return NotFound(new { message = "Produto não encontrado." });
 
-        await _produtoRepo.RemoverAsync(produto);
+        // 2. VERIFICAÇÃO DE VENDAS (Implementação solicitada)
+        // Verifica na tabela ItensPedido se existe algum registro com este IdProduto
+        bool possuiVendas = await _context.ItensPedido.AnyAsync(ip => ip.IdProduto == id);
+
+        if (possuiVendas)
+        {
+            // Retorna 409 Conflict avisando o front-end
+            return StatusCode(409, new
+            {
+                message = "Não é possível excluir este produto pois existem pedidos vinculados a ele. Tente inativá-lo.",
+                erro = "INTEGRIDADE_REFERENCIAL" // Opcional: código para o front tratar botão
+            });
+        }
+
+        // 3. Se não tem vendas, remove normalmente
+        _context.Produto.Remove(produto); // ou _produtoRepo.RemoverAsync(produto)
+        await _context.SaveChangesAsync();
+
         return Ok(new { message = "Produto removido com sucesso." });
     }
 }

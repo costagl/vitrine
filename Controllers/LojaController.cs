@@ -41,26 +41,38 @@ namespace VitrineApi.Controllers
                 .Include(l => l.IdCategoriaNavigation)
                 .Include(l => l.IdLayoutNavigation)
                 .Include(l => l.IdTemaNavigation)
+                .Include(l => l.Cpf_CnpjNavigation)             // Inclui a navegação para Lojista
+                .ThenInclude(lojista => lojista.EnderecoLojista) // Inclui o EnderecoLojista do Lojista
                 .ToListAsync();
 
             if (lojas == null || !lojas.Any())
                 return Ok(new { message = "Nenhuma loja encontrada." });
 
-            var lojasRequest = lojas.Select(loja => new LojaDto
+            var lojasRequest = lojas.Select(loja =>
             {
-                Id = loja.Id,
-                Subdominio = loja.Subdominio,
-                NomeLoja = loja.NomeLoja,
-                IdTema = loja.IdTema,
-                IdLayout = loja.IdLayout,
-                Cpf_Cnpj = loja.Cpf_Cnpj,
-                Avaliacao = loja.Avaliacao ?? 0,
-                Descricao = loja.Descricao,
-                LogotipoUrl = loja.LogotipoUrl,
-                // Navigation
-                CategoriaLoja = loja.IdCategoriaNavigation?.Titulo ?? string.Empty,
-                TituloTema = loja.IdTemaNavigation.Titulo,
-                TituloLayout = loja.IdLayoutNavigation.Titulo
+                // Pega o primeiro endereço do lojista, se existir
+                var enderecoLojista = loja.Cpf_CnpjNavigation?.EnderecoLojista?.FirstOrDefault();
+
+                return new LojaDto
+                {
+                    Id = loja.Id,
+                    Subdominio = loja.Subdominio,
+                    NomeLoja = loja.NomeLoja,
+                    IdTema = loja.IdTema,
+                    IdLayout = loja.IdLayout,
+                    Cpf_Cnpj = loja.Cpf_Cnpj,
+                    Avaliacao = loja.Avaliacao ?? 0,
+                    Descricao = loja.Descricao,
+                    LogotipoUrl = loja.LogotipoUrl,
+                    ImagemBannerUrl = loja.ImagemBannerUrl,
+                    // Adicionado Cidade e Estado
+                    Cidade = enderecoLojista?.Cidade ?? string.Empty,
+                    Estado = enderecoLojista?.Estado ?? string.Empty,
+                    // Navigation
+                    CategoriaLoja = loja.IdCategoriaNavigation?.Titulo ?? string.Empty,
+                    TituloTema = loja.IdTemaNavigation.Titulo,
+                    TituloLayout = loja.IdLayoutNavigation.Titulo
+                };
             }).ToList();
 
             return Ok(new { lojas = lojasRequest });
@@ -90,6 +102,7 @@ namespace VitrineApi.Controllers
                 Avaliacao = loja.Avaliacao ?? 0,
                 Descricao = loja.Descricao,
                 LogotipoUrl = loja.LogotipoUrl,
+                ImagemBannerUrl = loja.ImagemBannerUrl,
                 // Navigation
                 CategoriaLoja = loja.IdCategoriaNavigation?.Titulo ?? string.Empty,
                 TituloTema = loja.IdTemaNavigation.Titulo,
@@ -194,49 +207,6 @@ namespace VitrineApi.Controllers
             }
         }
 
-        [HttpPut("loja/alterar-layout-tema/{id}")]
-        public IActionResult Put(int id, [FromBody] AlterarLayoutTemaRequest request)
-        {
-            var loja = _context.Loja.FirstOrDefault(l => l.Id == id);
-            if (loja == null)
-            {
-                return NotFound(new { mensagem = "Loja não encontrada" });
-            }
-
-            bool houveAlteracao = false;
-
-            if (request.NovoLayoutId.HasValue && request.NovoLayoutId.Value != 0)
-            {
-                var layout = _context.Layout.FirstOrDefault(l => l.Id == request.NovoLayoutId);
-                if (layout == null)
-                {
-                    return BadRequest(new { mensagem = "Layout não encontrado" });
-                }
-                loja.IdLayout = request.NovoLayoutId.Value;
-                houveAlteracao = true;
-            }
-
-            if (request.NovoTemaId.HasValue && request.NovoTemaId.Value != 0)
-            {
-                var tema = _context.Tema.FirstOrDefault(t => t.Id == request.NovoTemaId);
-                if (tema == null)
-                {
-                    return BadRequest(new { mensagem = "Tema não encontrado" });
-                }
-                loja.IdTema = request.NovoTemaId.Value;
-                houveAlteracao = true;
-            }
-
-            if (!houveAlteracao)
-            {
-                return Ok(new { mensagem = "Não houveram alterações." });
-            }
-
-            _context.SaveChanges();
-
-            return Ok(new { mensagem = "Layout e/ou Tema alterados com sucesso" });
-        }
-
         [HttpPost("loja/verificar-subdominio")]
         public async Task<IActionResult> VerificarSubdominioExistente([FromBody] VerificarSubdominioVM request)
         {
@@ -250,6 +220,98 @@ namespace VitrineApi.Controllers
 
             return Ok(new { disponivel = !existe });
 
+        }
+
+        [HttpPatch("loja/alterar-dados/{idLoja}")]
+        public async Task<IActionResult> AlterarDadosLoja(int idLoja, [FromBody] LojaDto dto)
+        {
+            if (idLoja != dto.Id) return BadRequest(new { message = "ID mismatch." });
+
+            var lojaBanco = await _context.Loja
+                .Include(l => l.Cpf_CnpjNavigation)
+                    .ThenInclude(lojista => lojista.EnderecoLojista)
+                .FirstOrDefaultAsync(l => l.Id == idLoja);
+
+            if (lojaBanco == null) return NotFound(new { message = "Loja não encontrada." });
+
+            // --- ATUALIZAÇÃO DA LOJA ---
+            if (!string.IsNullOrEmpty(dto.NomeLoja)) lojaBanco.NomeLoja = dto.NomeLoja;
+            if (!string.IsNullOrEmpty(dto.Descricao)) lojaBanco.Descricao = dto.Descricao;
+            if (!string.IsNullOrEmpty(dto.Subdominio)) lojaBanco.Subdominio = dto.Subdominio;
+            if (!string.IsNullOrEmpty(dto.LogotipoUrl)) lojaBanco.LogotipoUrl = dto.LogotipoUrl;
+            if (!string.IsNullOrEmpty(dto.ImagemBannerUrl)) lojaBanco.ImagemBannerUrl = dto.ImagemBannerUrl;
+
+            // FKs (Tema e Layout)
+            if (dto.IdTema.HasValue && dto.IdTema.Value > 0 && dto.IdTema.Value != lojaBanco.IdTema)
+            {
+                if (await _context.Tema.AnyAsync(t => t.Id == dto.IdTema.Value))
+                    lojaBanco.IdTema = dto.IdTema.Value;
+            }
+
+            if (dto.IdLayout.HasValue && dto.IdLayout.Value > 0 && dto.IdLayout.Value != lojaBanco.IdLayout)
+            {
+                if (await _context.Layout.AnyAsync(l => l.Id == dto.IdLayout.Value))
+                    lojaBanco.IdLayout = dto.IdLayout.Value;
+            }
+
+            // --- ATUALIZAÇÃO DO LOJISTA ---
+            if (dto.Lojista != null && lojaBanco.Cpf_CnpjNavigation != null)
+            {
+                var lojistaBanco = lojaBanco.Cpf_CnpjNavigation;
+
+                // Atualizamos apenas dados de contato e nome
+                if (!string.IsNullOrEmpty(dto.Lojista.NomeCompleto)) lojistaBanco.NomeCompleto = dto.Lojista.NomeCompleto;
+                if (!string.IsNullOrEmpty(dto.Lojista.Email)) lojistaBanco.Email = dto.Lojista.Email;
+                if (!string.IsNullOrEmpty(dto.Lojista.Telefone)) lojistaBanco.Telefone = dto.Lojista.Telefone;
+
+                // REMOVIDO: A lógica que atualizava DataNascimento foi apagada.
+                // O campo DataNascimento permanecerá intacto no banco.
+
+                // --- ENDEREÇO ---
+                if (dto.Lojista.Endereco != null)
+                {
+                    var endDto = dto.Lojista.Endereco;
+                    var enderecoBanco = lojistaBanco.EnderecoLojista.FirstOrDefault();
+
+                    if (enderecoBanco == null)
+                    {
+                        // CRIAR NOVO
+                        var novoEndereco = new EnderecoLojista
+                        {
+                            Cpf_CnpjLojista = lojistaBanco.Cpf_Cnpj,
+                            Logradouro = endDto.Logradouro ?? "",
+                            Numero = endDto.Numero ?? "S/N",
+                            Bairro = endDto.Bairro ?? "",
+                            Cidade = endDto.Cidade ?? "",
+                            Estado = endDto.Estado ?? "",
+                            Cep = endDto.Cep ?? "",
+                            Complemento = endDto.Complemento
+                        };
+                        _context.EnderecoLojista.Add(novoEndereco);
+                    }
+                    else
+                    {
+                        // ATUALIZAR EXISTENTE
+                        if (!string.IsNullOrEmpty(endDto.Logradouro)) enderecoBanco.Logradouro = endDto.Logradouro;
+                        if (!string.IsNullOrEmpty(endDto.Numero)) enderecoBanco.Numero = endDto.Numero;
+                        if (!string.IsNullOrEmpty(endDto.Bairro)) enderecoBanco.Bairro = endDto.Bairro;
+                        if (!string.IsNullOrEmpty(endDto.Cidade)) enderecoBanco.Cidade = endDto.Cidade;
+                        if (!string.IsNullOrEmpty(endDto.Estado)) enderecoBanco.Estado = endDto.Estado;
+                        if (!string.IsNullOrEmpty(endDto.Cep)) enderecoBanco.Cep = endDto.Cep;
+                        if (endDto.Complemento != null) enderecoBanco.Complemento = endDto.Complemento;
+                    }
+                }
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Dados atualizados com sucesso." });
+            }
+            catch (DbUpdateException)
+            {
+                return StatusCode(500, new { message = "Erro ao atualizar dados." });
+            }
         }
 
         [HttpGet("loja/layout-tema/{idLoja}")]

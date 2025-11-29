@@ -83,20 +83,20 @@
   },
   {
     "ContainingType": "VitrineApi.Controllers.LojaController",
-    "Method": "Put",
-    "RelativePath": "loja/alterar-layout-tema/{id}",
-    "HttpMethod": "PUT",
+    "Method": "AlterarDadosLoja",
+    "RelativePath": "loja/alterar-dados/{idLoja}",
+    "HttpMethod": "PATCH",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
+        "Name": "idLoja",
         "Type": "System.Int32",
         "IsRequired": true
       },
       {
-        "Name": "request",
-        "Type": "VitrineApi.DTOs.AlterarLayoutTemaRequest",
+        "Name": "dto",
+        "Type": "VitrineApi.DTOs.LojaDto",
         "IsRequired": true
       }
     ],
@@ -230,6 +230,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "PedidoController",
+    "Method": "ObterResumoVendas",
+    "RelativePath": "pedido/resumo/{idLoja}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idLoja",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "PedidoController",
+    "Method": "ListarUltimosPedidos",
+    "RelativePath": "pedido/ultimos/{idLoja}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "idLoja",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "ProdutoController",
     "Method": "Buscar",
     "RelativePath": "produto/{id}",
@@ -294,22 +326,6 @@
   },
   {
     "ContainingType": "ProdutoController",
-    "Method": "Remover",
-    "RelativePath": "produto/excluir/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "ProdutoController",
     "Method": "Listar",
     "RelativePath": "produto/listar/{idLoja}",
     "HttpMethod": "GET",
@@ -318,6 +334,22 @@
     "Parameters": [
       {
         "Name": "idLoja",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ProdutoController",
+    "Method": "Remover",
+    "RelativePath": "produto/remover/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
       }

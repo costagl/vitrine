@@ -301,6 +301,88 @@ public class PedidoController : ControllerBase
         return Ok(pedidosVM);
     }
 
+    [HttpGet("ultimos/{idLoja}")]
+    public async Task<IActionResult> ListarUltimosPedidos(int idLoja)
+    {
+        // 1. Consulta otimizada: Filtra, ordena pela data mais recente e pega apenas 3.
+        var ultimosPedidos = await _context.Pedido
+            .Where(p => p.IdLoja == idLoja)
+            .OrderByDescending(p => p.DataPedido) // Os pedidos mais recentes primeiro
+            .Take(3)                             // Limita a 3 resultados
+            .Select(p => new
+            {
+                p.Id,
+                p.Status,
+                p.DataPedido
+            })
+            .ToListAsync(); // Executa a consulta no banco de dados
+
+        // 2. Projeta para o DTO e calcula o tempo decorrido no lado do C#.
+        var pedidosVM = ultimosPedidos.Select(p => new PedidoRecenteVM
+        {
+            IdPedido = p.Id,
+            Status = p.Status,
+            TempoDecorrido = CalcularTempoDecorrido(p.DataPedido) // Chama a função para formatar o tempo
+        }).ToList();
+
+        return Ok(pedidosVM);
+    }
+    private string CalcularTempoDecorrido(DateTime dataPedido)
+    {
+        // Usa DateTime.UtcNow para consistência, assumindo que DataPedido também está em UTC.
+        // Se DataPedido estiver em hora local (Local Time), use DateTime.Now.
+        TimeSpan diferenca = DateTime.UtcNow - dataPedido;
+
+        if (diferenca.TotalDays >= 1)
+        {
+            // Arredonda para baixo para o número de dias inteiros
+            return $"Há {(int)Math.Floor(diferenca.TotalDays)} dia(s)";
+        }
+        else if (diferenca.TotalHours >= 1)
+        {
+            // Arredonda para baixo para o número de horas inteiras
+            return $"Há {(int)Math.Floor(diferenca.TotalHours)} hora(s)";
+        }
+        else if (diferenca.TotalMinutes >= 1)
+        {
+            // Arredonda para baixo para o número de minutos inteiros
+            return $"Há {(int)Math.Floor(diferenca.TotalMinutes)} minuto(s)";
+        }
+        else
+        {
+            return "Agora mesmo";
+        }
+    }
+
+    [HttpGet("resumo/{idLoja}")]
+    public IActionResult ObterResumoVendas(int idLoja)
+    {
+        // 1. Calcula a Receita Total (Soma do ValorTotal dos pedidos da loja)
+        var receitaTotal = _context.Pedido
+            .Where(p => p.IdLoja == idLoja)
+            .Sum(p => (decimal?)p.ValorTotal) ?? 0; // O cast (decimal?) previne erro se não houver pedidos
+
+        // 2. Calcula a Quantidade de Produtos (Soma das quantidades na tabela ItensPedido)
+        // Precisamos do JOIN pois a tabela ItensPedido não costuma ter o IdLoja direto, apenas o IdPedido
+        var qtdProdutosVendidos = _context.Pedido
+            .Where(p => p.IdLoja == idLoja)
+            .Join(_context.ItensPedido,
+                  pedido => pedido.Id,
+                  item => item.IdPedido,
+                  (pedido, item) => item.Quantidade)
+            .Sum(qtd => (int?)qtd) ?? 0;
+
+        // 3. Monta o retorno
+        var resumo = new ResumoVendasVM
+        {
+            IdLoja = idLoja,
+            QuantidadeProdutosVendidos = qtdProdutosVendidos,
+            ReceitaTotal = receitaTotal
+        };
+
+        return Ok(resumo);
+    }
+
     [HttpGet("pedido/{id}")]
     public async Task<IActionResult> ObterPedidoPorId(int id)
     {
