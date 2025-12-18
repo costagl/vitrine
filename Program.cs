@@ -15,12 +15,11 @@ using VitrineApi.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// =================================================================================
+// ============================================
 // 1. CONFIGURAÇÃO DOS SERVIÇOS (DI Container)
-// =================================================================================
+// ============================================
 
 // Configuração para o Nginx (Proxy Reverso)
-// Isso é essencial para que o App saiba que está atrás de um proxy e aceite os headers HTTPS
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
@@ -152,14 +151,14 @@ builder.Services.AddAutoMapper(cfg => {
 
 var app = builder.Build();
 
-// =================================================================================
-// 2. PIPELINE DE MIDDLEWARES (A ORDEM AQUI É CRÍTICA)
-// =================================================================================
+// ===============================
+// 2. PIPELINE DE MIDDLEWARES
+// ===============================
 
-// 1. Processar headers do Nginx (Deve ser o primeiro)
+// 1. Processar headers do Nginx
 app.UseForwardedHeaders();
 
-// 2. Tratamento Global de Erros (Try/Catch ao redor de tudo)
+// 2. Tratamento Global de Erros
 app.Use(async (context, next) =>
 {
     try
@@ -168,13 +167,11 @@ app.Use(async (context, next) =>
     }
     catch (Exception ex)
     {
-        // Log o erro aqui (Console.WriteLine ou ILogger)
         Console.WriteLine($"Erro Interno: {ex.Message}");
 
         context.Response.StatusCode = 500;
         context.Response.ContentType = "application/json";
 
-        // Em produção, evite mostrar o ex.Message real para não vazar dados do banco.
         var mensagemErro = app.Environment.IsDevelopment() ? ex.Message : "Ocorreu um erro interno no servidor.";
         await context.Response.WriteAsync($"{{\"erro\":\"{mensagemErro}\"}}");
     }
@@ -188,20 +185,19 @@ if (app.Environment.IsDevelopment())
 }
 
 // 4. Redirecionamento HTTPS
-// (O Nginx já cuida disso, mas mantemos para segurança interna)
 app.UseHttpsRedirection();
 
-// 5. Roteamento (Descobrir qual Controller chamar)
+// 5. Roteamento
 app.UseRouting();
 
-// 6. CORS (Deve vir APÓS UseRouting e ANTES de Auth)
+// 6. CORS
 app.UseCors("CorsPolicy");
 
 // 7. Autenticação e Autorização
 app.UseAuthentication();
 app.UseAuthorization();
 
-// 8. Rate Limiter (Seu middleware customizado)
+// 8. Rate Limiter
 app.UseMiddleware<RateLimiterMiddleware>();
 
 // 9. Mapeamento dos Endpoints
